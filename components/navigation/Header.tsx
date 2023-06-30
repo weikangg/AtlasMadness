@@ -30,6 +30,7 @@ import {
   IconChevronDown,
 } from '@tabler/icons-react';
 import Link from 'next/link';
+import { ColorSchemeToggle } from '../ColorSchemeToggle/ColorSchemeToggle';
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -208,8 +209,8 @@ export function HeaderMegaMenu() {
             <Link href="new-upload" className={classes.link}>
               Upload New
             </Link>
+            <ColorSchemeToggle/>
           </Group>
-
           <Group className={classes.hiddenMobile}>
             <Button variant="default">Log in</Button>
             <Button>Sign up</Button>
@@ -231,9 +232,9 @@ export function HeaderMegaMenu() {
         <ScrollArea h={`calc(100vh - ${rem(60)})`} mx="-md">
           <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
 
-          <a href="#" className={classes.link}>
+          <Link href="/" className={classes.link}>
             Home
-          </a>
+          </Link>
           <UnstyledButton className={classes.link} onClick={toggleLinks}>
             <Center inline>
               <Box component="span" mr={5}>
@@ -243,12 +244,12 @@ export function HeaderMegaMenu() {
             </Center>
           </UnstyledButton>
           <Collapse in={linksOpened}>{links}</Collapse>
-          <a href="#" className={classes.link}>
-            Learn
-          </a>
-          <a href="#" className={classes.link}>
-            Academy
-          </a>
+          <Link href="#" className={classes.link}>
+            All Notes
+          </Link>
+          <Link href="new-upload" className={classes.link}>
+            Upload New
+          </Link>
 
           <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
 

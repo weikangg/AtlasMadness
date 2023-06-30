@@ -18,20 +18,19 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
 
   return (
     <>
-      <Layout>
-        <Head>
-          <title>Atlas Madness</title>
-          <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-          <link rel="shortcut icon" href="/favicon.svg" />
-        </Head>
-
-        <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+      <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+      <Head>
+        <title>Atlas Madness</title>
+        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+        <link rel="shortcut icon" href="/favicon.svg" />
+      </Head>
+        <Layout>
           <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
             <Component {...pageProps} />
             <Notifications />
           </MantineProvider>
-        </ColorSchemeProvider>
-      </Layout>
+        </Layout>
+      </ColorSchemeProvider>
     </>
   );
 }

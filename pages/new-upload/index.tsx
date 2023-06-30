@@ -1,9 +1,13 @@
 import { DropzoneButton } from '../../components/NewUpload/DropzoneButton';
+import UploadTabs from '../../components/NewUpload/UploadTabs';
 
 export default function TestPage() {
   return (
-    <div className="w-5/6">
+    <main>
+      <div className="flex justify-center">
+        <UploadTabs />
+      </div>
       <DropzoneButton />
-    </div>
+    </main>
   );
 }
