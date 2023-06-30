@@ -3,7 +3,9 @@ import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeTo
 export default function HomePage() {
   return (
     <>
-      <div>Hello world</div>
+      <div className='text-center'>
+        <p className=" text-center">Hello world</p>
+      </div>
       <ColorSchemeToggle />
     </>
   );
