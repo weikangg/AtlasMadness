@@ -1528,6 +1528,13 @@
   dependencies:
     "@mantine/utils" "6.0.2"
 
+"@mantine/ds@^6.0.2":
+  "integrity" "sha512-T4dypmfG1tlVUEJv8m31ToxbIF9HLvoOdB6pd4bgyYBP1AbgZqTviDO8J4Pod/+J9PyAA75qqLVYcc6Z46jwkg=="
+  "resolved" "https://registry.npmjs.org/@mantine/ds/-/ds-6.0.2.tgz"
+  "version" "6.0.2"
+  dependencies:
+    "@mantine/utils" "6.0.2"
+
 "@mantine/hooks@6.0.2":
   "integrity" "sha512-wLSkp0NRe4XN7JujIUvkKghIBJC9YZ33CJlrFbcBFLD6LiSLX7lWyWOsiFzXrPND0Hpgn3AjckFQGblA8n34XA=="
   "resolved" "https://registry.npmjs.org/@mantine/hooks/-/hooks-6.0.2.tgz"
@@ -1548,6 +1555,13 @@
   dependencies:
     "@mantine/utils" "6.0.2"
     "react-transition-group" "4.4.2"
+
+"@mantine/nprogress@^6.0.2":
+  "integrity" "sha512-P5nWqPwwc1d4ixLpbx2vAhw9oAngfOz8LGb+zO1DZg1mSiXPn9u+lGkrKETy0rjYgFDd1TPUXNgue//OYfgfZg=="
+  "resolved" "https://registry.npmjs.org/@mantine/nprogress/-/nprogress-6.0.2.tgz"
+  "version" "6.0.2"
+  dependencies:
+    "@mantine/utils" "6.0.2"
 
 "@mantine/prism@6.0.2":
   "integrity" "sha512-fIOpHfpv2BOpCb1kPECRLdNTJY4CkH62JO130a51N7FHEQZlFUnjw557BnW2zYie9wdurKKQ6sEwLkI0bM2CxQ=="
@@ -2415,7 +2429,7 @@
   dependencies:
     "tslib" "^2.4.0"
 
-"@tabler/icons-react@^2.4.0":
+"@tabler/icons-react@*", "@tabler/icons-react@^2.4.0":
   "integrity" "sha512-U04bSknpXPdZP8soAnMPiz4g6PXPfWHfMoe2qhDoRlnS8UJ8JHHE/k4Lx4rw2Tfy9a2QJeoPV5HQIeKXrNPHGA=="
   "resolved" "https://registry.npmjs.org/@tabler/icons-react/-/icons-react-2.4.0.tgz"
   "version" "2.4.0"
