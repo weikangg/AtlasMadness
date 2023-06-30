@@ -1,5 +1,7 @@
-import { Tabs, TabsProps, rem } from '@mantine/core';
-import { IconPhoto, IconMessageCircle, IconSettings } from '@tabler/icons-react';
+import { Tabs, TabsProps, rem, TabsValue } from '@mantine/core';
+import { IconFileText, IconVideo } from '@tabler/icons-react';
+import { useState } from 'react';
+import {DropzoneNotesButton, DropzoneVideoButton} from './DropzoneButton';
 
 function StyledTabs(props: TabsProps) {
   return (
@@ -61,19 +63,29 @@ function StyledTabs(props: TabsProps) {
 }
 
 export default function UploadTabs() {
+  const [active, setActive] = useState<TabsValue>('notes');
+
+  const handleTabChange = (value: TabsValue) => {
+    if (value !== null) {
+      setActive(value);
+    }
+  };
   return (
-    <StyledTabs>
-      <Tabs.List>
-        <Tabs.Tab value="settings" icon={<IconSettings size="1rem" />}>
-          Settings
-        </Tabs.Tab>
-        <Tabs.Tab value="messages" icon={<IconMessageCircle size="1rem" />}>
-          Messages
-        </Tabs.Tab>
-        <Tabs.Tab value="gallery" icon={<IconPhoto size="1rem" />}>
-          Gallery
-        </Tabs.Tab>
-      </Tabs.List>
-    </StyledTabs>
+    <div>
+      <StyledTabs onTabChange={handleTabChange} defaultValue={"notes"}>
+        <Tabs.List>
+          <Tabs.Tab value="notes" icon={<IconFileText size="1rem" />}>
+            Upload Notes
+          </Tabs.Tab>
+          <Tabs.Tab value="video" icon={<IconVideo size="1rem" />}>
+            Upload Lecture Video
+          </Tabs.Tab>
+        </Tabs.List>
+      </StyledTabs>
+
+      {active === 'notes' && <DropzoneNotesButton/>}
+
+      {active === 'video' && <DropzoneVideoButton/>}
+    </div>
   );
 }
