@@ -29,6 +29,8 @@ import {
   IconCoin,
   IconChevronDown,
 } from '@tabler/icons-react';
+import Link from 'next/link';
+import { ColorSchemeToggle } from '../ColorSchemeToggle/ColorSchemeToggle';
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -153,19 +155,19 @@ export function HeaderMegaMenu() {
           <MantineLogo size={30} />
 
           <Group sx={{ height: '100%' }} spacing={0} className={classes.hiddenMobile}>
-            <a href="#" className={classes.link}>
+            <Link href="/" className={classes.link}>
               Home
-            </a>
+            </Link>
             <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
               <HoverCard.Target>
-                <a href="#" className={classes.link}>
+                <Link href="#" className={classes.link}>
                   <Center inline>
                     <Box component="span" mr={5}>
                       Features
                     </Box>
                     <IconChevronDown size={16} color={theme.fn.primaryColor()} />
                   </Center>
-                </a>
+                </Link>
               </HoverCard.Target>
 
               <HoverCard.Dropdown sx={{ overflow: 'hidden' }}>
@@ -201,14 +203,14 @@ export function HeaderMegaMenu() {
                 </div>
               </HoverCard.Dropdown>
             </HoverCard>
-            <a href="#" className={classes.link}>
-              Learn
-            </a>
-            <a href="#" className={classes.link}>
-              Academy
-            </a>
+            <Link href="#" className={classes.link}>
+              All Notes
+            </Link>
+            <Link href="new-upload" className={classes.link}>
+              Upload New
+            </Link>
+            <ColorSchemeToggle/>
           </Group>
-
           <Group className={classes.hiddenMobile}>
             <Button variant="default">Log in</Button>
             <Button>Sign up</Button>
@@ -230,9 +232,9 @@ export function HeaderMegaMenu() {
         <ScrollArea h={`calc(100vh - ${rem(60)})`} mx="-md">
           <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
 
-          <a href="#" className={classes.link}>
+          <Link href="/" className={classes.link}>
             Home
-          </a>
+          </Link>
           <UnstyledButton className={classes.link} onClick={toggleLinks}>
             <Center inline>
               <Box component="span" mr={5}>
@@ -242,12 +244,12 @@ export function HeaderMegaMenu() {
             </Center>
           </UnstyledButton>
           <Collapse in={linksOpened}>{links}</Collapse>
-          <a href="#" className={classes.link}>
-            Learn
-          </a>
-          <a href="#" className={classes.link}>
-            Academy
-          </a>
+          <Link href="#" className={classes.link}>
+            All Notes
+          </Link>
+          <Link href="new-upload" className={classes.link}>
+            Upload New
+          </Link>
 
           <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
 
