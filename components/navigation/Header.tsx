@@ -135,6 +135,15 @@ export function HeaderMegaMenu() {
   const { classes, theme } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
   const { data: session } = useSession();
+  // Define a state variable to track the modal visibility
+  const [showModal, setShowModal] = useState(false);
+  // Callback function to close the modal
+  const closeModal = () => {
+    setShowModal(false);
+  };
+  const openModal = () => {
+    setShowModal(true);
+  }
 
   const links = mockdata.map((item) => (
     <UnstyledButton className={classes.subLink} key={item.title}>
@@ -223,7 +232,7 @@ export function HeaderMegaMenu() {
                 Sign Out
               </Button>
             ) : (
-              <Button variant="default" onClick={open}>
+              <Button variant="default" onClick={openModal}>
                 {' '}
                 Sign In
               </Button>
@@ -273,7 +282,7 @@ export function HeaderMegaMenu() {
                 Sign Out
               </Button>
             ) : (
-              <Button variant="default" onClick={open}>
+              <Button variant="default" onClick={openModal}>
                 {' '}
                 Sign In
               </Button>
@@ -282,8 +291,8 @@ export function HeaderMegaMenu() {
         </ScrollArea>
       </Drawer>
 
-      <Modal opened={opened} onClose={close}>
-        <AuthenticationForm />
+      <Modal opened={ showModal} onClose={close || closeModal}>
+        <AuthenticationForm closeModal={closeModal} />
       </Modal>
     </Box>
   );

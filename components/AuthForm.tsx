@@ -15,8 +15,9 @@ import {
 } from '@mantine/core';
 import { GithubButton, GoogleButton } from './SocialButtons';
 import { useSession, signIn } from 'next-auth/react';
+import { useState } from 'react';
 
-export function AuthenticationForm(props: PaperProps) {
+export function AuthenticationForm(props: PaperProps & { closeModal: () => void }) {
   const [type, toggle] = useToggle(['login', 'register']);
 
   const form = useForm({
@@ -41,6 +42,7 @@ export function AuthenticationForm(props: PaperProps) {
       password: values.password,
       callbackUrl: '/',
     });
+    props.closeModal();
   };
 
   const handleSubmitRegister = async (values: any) => {
