@@ -149,6 +149,10 @@ export function HeaderMegaMenu() {
     close();
   };
 
+  const handleCloseModal = () => {
+    close();
+  };
+
   const links = mockdata.map((item) => (
     <UnstyledButton className={classes.subLink} key={item.title}>
       <Group noWrap align="flex-start">
