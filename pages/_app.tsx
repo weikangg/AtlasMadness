@@ -18,7 +18,6 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
 
   return (
     <>
-      <Layout>
         <Head>
           <title>Atlas Madness</title>
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
@@ -27,11 +26,12 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
 
         <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
           <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
+            <Layout>
             <Component {...pageProps} />
             <Notifications />
+            </Layout>
           </MantineProvider>
         </ColorSchemeProvider>
-      </Layout>
     </>
   );
 }
