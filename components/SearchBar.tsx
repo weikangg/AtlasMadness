@@ -21,7 +21,7 @@ const useStyles = createStyles((theme) => ({
       border: 'none',
       cursor: 'pointer',
     },
-  }));
+}));
 
   const SearchBar = ({ onSearch }: { onSearch: (query: string) => void }) => {
     const inputRef = useRef<HTMLInputElement>(null);

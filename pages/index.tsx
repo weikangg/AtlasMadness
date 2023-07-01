@@ -1,13 +1,23 @@
-import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
 import Layout from '../components/navigation/Layout';
 import ArticleSection from '../components/ArticleSection';
+import { Image } from '@mantine/core';
+import test from '../images/banner.png';
+import { createStyles, rem } from '@mantine/core';
+
+const useStyles = createStyles((theme) => ({
+  
+  img:{
+    padding:'50px'
+  }
+}));
 
 export default function HomePage() {
+  const {classes} = useStyles();
+
   return (
     <Layout>
-      <ColorSchemeToggle />
-      <div style={{ padding: '20px', textAlign:'center' }}>
-        <h1 style={{ fontSize: '45px', fontWeight: 'bold'}}>
+      <div style={{textAlign:'center', marginTop:'-60px'}}>
+        <h1 style={{ fontSize: '65px', fontWeight: 'bold'}}>
           Welcome to SummAIze
         </h1>
         <p style={{ fontSize: '20px', paddingLeft:"150px", paddingRight:"150px"}}>
@@ -16,6 +26,7 @@ export default function HomePage() {
           helps students from all over the world condense high volumes of study materials in a matter
           of seconds.
         </p>
+        <Image className={classes.img} src = {test.src}/>
       </div>
     <ArticleSection/>
     </Layout>
