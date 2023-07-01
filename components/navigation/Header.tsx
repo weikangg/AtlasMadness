@@ -32,7 +32,6 @@ import {
 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { ColorSchemeToggle } from '../ColorSchemeToggle/ColorSchemeToggle';
-import { useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { AuthenticationForm } from '../AuthForm';
 
@@ -144,6 +143,10 @@ export function HeaderMegaMenu() {
   const openModal = () => {
     setShowModal(true);
   }
+
+  const handleCloseModal = () => {
+    close();
+  };
 
   const links = mockdata.map((item) => (
     <UnstyledButton className={classes.subLink} key={item.title}>
