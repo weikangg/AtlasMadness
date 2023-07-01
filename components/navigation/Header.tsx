@@ -17,6 +17,7 @@ import {
   Collapse,
   ScrollArea,
   rem,
+  Modal,
 } from '@mantine/core';
 import { MantineLogo } from '@mantine/ds';
 import { useDisclosure } from '@mantine/hooks';
@@ -31,6 +32,9 @@ import {
 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { ColorSchemeToggle } from '../ColorSchemeToggle/ColorSchemeToggle';
+import { useState } from 'react';
+import { useSession, signOut } from 'next-auth/react';
+import { AuthenticationForm } from '../AuthForm';
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -129,6 +133,8 @@ export function HeaderMegaMenu() {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
   const { classes, theme } = useStyles();
+  const [opened, { open, close }] = useDisclosure(false);
+  const { data: session } = useSession();
 
   const links = mockdata.map((item) => (
     <UnstyledButton className={classes.subLink} key={item.title}>
@@ -209,11 +215,19 @@ export function HeaderMegaMenu() {
             <Link href="new-upload" className={classes.link}>
               Upload New
             </Link>
-            <ColorSchemeToggle/>
+            <ColorSchemeToggle />
           </Group>
           <Group className={classes.hiddenMobile}>
-            <Button variant="default">Log in</Button>
-            <Button>Sign up</Button>
+            {session ? (
+              <Button variant="default" onClick={() => signOut()}>
+                Sign Out
+              </Button>
+            ) : (
+              <Button variant="default" onClick={open}>
+                {' '}
+                Sign In
+              </Button>
+            )}
           </Group>
 
           <Burger opened={drawerOpened} onClick={toggleDrawer} className={classes.hiddenDesktop} />
@@ -254,11 +268,23 @@ export function HeaderMegaMenu() {
           <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
 
           <Group position="center" grow pb="xl" px="md">
-            <Button variant="default">Log in</Button>
-            <Button>Sign up</Button>
+            {session ? (
+              <Button variant="default" onClick={() => signOut()}>
+                Sign Out
+              </Button>
+            ) : (
+              <Button variant="default" onClick={open}>
+                {' '}
+                Sign In
+              </Button>
+            )}
           </Group>
         </ScrollArea>
       </Drawer>
+
+      <Modal opened={opened} onClose={close}>
+        <AuthenticationForm />
+      </Modal>
     </Box>
   );
 }

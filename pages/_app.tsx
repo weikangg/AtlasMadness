@@ -5,6 +5,7 @@ import Head from 'next/head';
 import { MantineProvider, ColorScheme, ColorSchemeProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import Layout from '../components/navigation/Layout';
+import { SessionProvider } from 'next-auth/react';
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;
@@ -25,10 +26,12 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
       </Head>
       <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
         <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-          <Layout>
-            <Component {...pageProps} />
-            <Notifications />
-          </Layout>
+          <SessionProvider session={pageProps.session}>
+            <Layout>
+              <Component {...pageProps} />
+              <Notifications />
+            </Layout>
+          </SessionProvider>
         </ColorSchemeProvider>
       </MantineProvider>
     </>
