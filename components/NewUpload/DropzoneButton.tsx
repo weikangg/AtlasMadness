@@ -34,7 +34,9 @@ export function DropzoneNotesButton() {
     <div className={classes.wrapper}>
       <Dropzone
         openRef={openRef}
-        onDrop={() => {}}
+        onDrop={(event) => {
+          console.log(event);
+        }}
         className={classes.dropzone}
         radius="md"
         accept={[MIME_TYPES.pdf, MIME_TYPES.ppt, MIME_TYPES.pptx]}
