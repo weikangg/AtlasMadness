@@ -143,7 +143,8 @@ export function HeaderMegaMenu() {
   };
   const openModal = () => {
     setShowModal(true);
-  }
+  };
+
 
   const links = mockdata.map((item) => (
     <UnstyledButton className={classes.subLink} key={item.title}>
