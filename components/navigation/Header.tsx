@@ -145,7 +145,6 @@ export function HeaderMegaMenu() {
     setShowModal(true);
   };
 
-
   const links = mockdata.map((item) => (
     <UnstyledButton className={classes.subLink} key={item.title}>
       <Group noWrap align="flex-start">
@@ -219,7 +218,7 @@ export function HeaderMegaMenu() {
                 </div>
               </HoverCard.Dropdown>
             </HoverCard>
-            <Link href="#" className={classes.link}>
+            <Link href="all-notes" className={classes.link}>
               All Notes
             </Link>
             <Link href="new-upload" className={classes.link}>
@@ -268,7 +267,7 @@ export function HeaderMegaMenu() {
             </Center>
           </UnstyledButton>
           <Collapse in={linksOpened}>{links}</Collapse>
-          <Link href="#" className={classes.link}>
+          <Link href="all-notes" className={classes.link}>
             All Notes
           </Link>
           <Link href="new-upload" className={classes.link}>
@@ -292,7 +291,7 @@ export function HeaderMegaMenu() {
         </ScrollArea>
       </Drawer>
 
-      <Modal opened={ showModal} onClose={close || closeModal}>
+      <Modal opened={showModal} onClose={close || closeModal}>
         <AuthenticationForm closeModal={closeModal} />
       </Modal>
     </Box>

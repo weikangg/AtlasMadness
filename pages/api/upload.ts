@@ -13,7 +13,6 @@ const connectToDatabase = async (): Promise<Db> => {
   const client = new MongoClient(process.env.MONGO_URI!);
   try {
     await client.connect();
-    console.log('Successfully connected to database'); // Added log
     const db = client.db('Auth');
     return db;
   } catch (error) {
@@ -51,6 +50,7 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse) {
 
       uploadStream.on('finish', () => {
         res.status(200).json({ message: 'File uploaded successfully' });
+        return
       });
 
       uploadStream.on('error', (error) => {
