@@ -148,7 +148,6 @@ export function HeaderMegaMenu() {
   const handleCloseModal = () => {
     close();
   };
-
   const handleCloseModal = () => {
     close();
   };
