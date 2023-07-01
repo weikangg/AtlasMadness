@@ -14,10 +14,11 @@ import {
   Stack,
 } from '@mantine/core';
 import { GithubButton, GoogleButton } from './SocialButtons';
-import { useSession, signIn, signOut } from 'next-auth/react';
+import { useSession, signIn } from 'next-auth/react';
 
 export function AuthenticationForm(props: PaperProps) {
   const [type, toggle] = useToggle(['login', 'register']);
+
   const form = useForm({
     initialValues: {
       email: '',
@@ -32,6 +33,29 @@ export function AuthenticationForm(props: PaperProps) {
         val.length <= 6 ? 'Password should include at least 6 characters' : null,
     },
   });
+
+  const handleSubmitLogin = async (values: any) => {
+    const status = await signIn('credentials', {
+      redirect: false,
+      email: values.email,
+      password: values.password,
+      callbackUrl: '/',
+    });
+  };
+
+  const handleSubmitRegister = async (values: any) => {
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(values),
+    };
+
+    const response = await fetch('http://localhost:3000/api/auth/signup', options)
+      .then((res) => res.json())
+      .then(() => {
+        toggle();
+      });
+  };
 
   return (
     <Paper radius="md" p="xl" withBorder {...props}>
@@ -56,7 +80,11 @@ export function AuthenticationForm(props: PaperProps) {
 
       <Divider label="Or continue with email" labelPosition="center" my="lg" />
 
-      <form onSubmit={form.onSubmit(() => {})}>
+      <form
+        onSubmit={form.onSubmit((values) => {
+          type === 'login' ? handleSubmitLogin(values) : handleSubmitRegister(values);
+        })}
+      >
         <Stack>
           {type === 'register' && (
             <TextInput
@@ -71,7 +99,7 @@ export function AuthenticationForm(props: PaperProps) {
           <TextInput
             required
             label="Email"
-            placeholder="hello@mantine.dev"
+            placeholder="hello@email.com"
             value={form.values.email}
             onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
             error={form.errors.email && 'Invalid email'}
