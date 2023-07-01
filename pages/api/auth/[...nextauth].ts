@@ -47,7 +47,7 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  secret: 'gl/o0pwlj9Q0RiUkBDH6rMQQMMHoxnjvbO0GWTnhprU=',
+  secret: process.env.AUTH_SECRET!,
 };
 
 export default NextAuth(authOptions);
