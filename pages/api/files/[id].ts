@@ -1,4 +1,5 @@
 import { MongoClient, Db, GridFSBucket, ObjectId } from 'mongodb';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 const connectToDatabase = async (): Promise<Db> => {
   const client = new MongoClient(process.env.MONGO_URI!);
@@ -7,8 +8,8 @@ const connectToDatabase = async (): Promise<Db> => {
   return db;
 };
 
-export default async function handler(req, res) {
-  console.log('ID from query: ', req.query.id); // Log the ID for debugging
+export default async function handler(req:any, res:NextApiResponse) {
+
   if (req.method === 'GET') {
     try {
       const db = await connectToDatabase();

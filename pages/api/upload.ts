@@ -21,9 +21,9 @@ const connectToDatabase = async (): Promise<Db> => {
   }
 };
 
-export default async function handler(req:NextApiRequest, res:NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const data:any = await new Promise((resolve, reject) => {
+    const data: any = await new Promise((resolve, reject) => {
       const form = new IncomingForm();
 
       form.parse(req, (err, fields, files) => {
@@ -35,6 +35,9 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse) {
         console.log(files); // log the files object
         resolve({ fields, files });
       });
+
+      // Reject the promise after 5 seconds
+      setTimeout(() => reject(new Error('Form parse timeout')), 5000);
     });
 
     try {
@@ -50,7 +53,7 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse) {
 
       uploadStream.on('finish', () => {
         res.status(200).json({ message: 'File uploaded successfully' });
-        return
+        return;
       });
 
       uploadStream.on('error', (error) => {

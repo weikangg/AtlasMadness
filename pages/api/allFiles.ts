@@ -14,14 +14,14 @@ const connectToDatabase = async (): Promise<Db> => {
   }
 };
 
-export default async function handler(req, res) {
+export default async function handler(req:NextApiRequest, res:NextApiResponse) {
   if (req.method === 'GET') {
     try {
       const db = await connectToDatabase();
       const bucket = new GridFSBucket(db);
 
       // Create an array to store the file data
-      let filesData = [];
+      let filesData:any = [];
 
       // Create a stream and use it to read filenames from GridFS
       const stream = bucket.find().stream();

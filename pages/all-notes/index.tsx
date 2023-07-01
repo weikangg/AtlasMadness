@@ -1,8 +1,14 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
+type Note = {
+  _id: string;
+  filename: string;
+  length: number;
+};
+
 export default function AllNotesPage() {
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState<Note[]>([]); // Define the type of state
 
   useEffect(() => {
     const getNotes = async () => {
