@@ -34,6 +34,7 @@ import Link from 'next/link';
 import { ColorSchemeToggle } from '../ColorSchemeToggle/ColorSchemeToggle';
 import { useSession, signOut } from 'next-auth/react';
 import { AuthenticationForm } from '../AuthForm';
+import { useState } from 'react';
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -142,7 +143,7 @@ export function HeaderMegaMenu() {
   };
   const openModal = () => {
     setShowModal(true);
-  }
+  };
 
   const handleCloseModal = () => {
     close();
@@ -294,7 +295,7 @@ export function HeaderMegaMenu() {
         </ScrollArea>
       </Drawer>
 
-      <Modal opened={ showModal} onClose={close || closeModal}>
+      <Modal opened={showModal} onClose={close || closeModal}>
         <AuthenticationForm closeModal={closeModal} />
       </Modal>
     </Box>
