@@ -148,6 +148,9 @@ export function HeaderMegaMenu() {
   const handleCloseModal = () => {
     close();
   };
+  const handleCloseModal = () => {
+    close();
+  };
 
   const links = mockdata.map((item) => (
     <UnstyledButton className={classes.subLink} key={item.title}>
