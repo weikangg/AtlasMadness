@@ -6,7 +6,7 @@ import { createStyles, rem } from '@mantine/core';
 
 const useStyles = createStyles((theme) => ({
   img: {
-    padding: '50px',
+    padding: '100px',
   },
 }));
 
