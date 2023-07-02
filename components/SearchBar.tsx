@@ -16,7 +16,6 @@ const useStyles = createStyles((theme) => ({
     },
     searchButton: {
       padding: `${rem(8)} ${rem(16)}`,
-      backgroundColor: theme.colors.blue[500],
       color: theme.white,
       border: 'none',
       cursor: 'pointer',
