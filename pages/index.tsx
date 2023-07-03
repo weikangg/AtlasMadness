@@ -1,8 +1,8 @@
-import Layout from '../components/navigation/Layout';
 import ArticleSection from '../components/ArticleSection';
 import { Image } from '@mantine/core';
 import test from '../images/banner.png';
 import { createStyles, rem } from '@mantine/core';
+import SummarizeButton from '../components/SummarizeContent/SummarizeButton';
 
 const useStyles = createStyles((theme) => ({
   img: {
@@ -25,6 +25,7 @@ export default function HomePage() {
         </p>
         <Image className={classes.img} src={test.src} />
       </div>
+      <SummarizeButton/>
       <ArticleSection />
     </>
   );
