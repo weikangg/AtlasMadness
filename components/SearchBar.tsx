@@ -7,8 +7,6 @@ const useStyles = createStyles((theme) => ({
     searchBar: {
       display: 'flex',
       alignItems: 'center',
-      borderColor:'white',
-      borderWidth:'10px',
     },
     searchInput: {
       padding: rem(8),
