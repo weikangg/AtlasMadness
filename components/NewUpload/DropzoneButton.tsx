@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { Text, Group, Button, createStyles, rem } from '@mantine/core';
 import { Dropzone, MIME_TYPES } from '@mantine/dropzone';
 import { IconCloudUpload, IconX, IconDownload } from '@tabler/icons-react';
+import { useSession } from 'next-auth/react';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -25,32 +26,36 @@ const useStyles = createStyles((theme) => ({
     bottom: rem(-20),
   },
 }));
-const handleDrop = async (acceptedFiles:any) => {
-  const formData = new FormData();
 
-  acceptedFiles.forEach((file:any) => {
-    formData.append('file', file);
-  });
-
-  const response = await fetch('/api/upload', {
-    method: 'POST',
-    body: formData,
-  });
-
-  if (!response.ok) {
-    // Try to decode the response as text if it's not OK
-    const text = await response.text();
-    throw new Error(`Request failed: ${text}`);
-  }
-    
-  // Try to decode the response as JSON if it's OK
-  const data = await response.json();
-  console.log(data);
-};
 export function DropzoneNotesButton() {
   const { classes, theme } = useStyles();
   const openRef = useRef<() => void>(null);
+  const { data: session } = useSession();
 
+  const handleDrop = async (acceptedFiles: any) => {
+    const formData = new FormData();
+
+    acceptedFiles.forEach((file: any) => {
+      formData.append('file', file);
+      formData.append('email', session?.user?.email || '');
+    });
+
+    console.log(formData);
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      // Try to decode the response as text if it's not OK
+      const text = await response.text();
+      throw new Error(`Request failed: ${text}`);
+    }
+
+    // Try to decode the response as JSON if it's OK
+    const data = await response.json();
+    console.log(data);
+  };
 
   return (
     <div className={classes.wrapper}>
@@ -105,6 +110,32 @@ export function DropzoneNotesButton() {
 export function DropzoneVideoButton() {
   const { classes, theme } = useStyles();
   const openRef = useRef<() => void>(null);
+  const { data: session } = useSession();
+
+  const handleDrop = async (acceptedFiles: any) => {
+    const formData = new FormData();
+
+    acceptedFiles.forEach((file: any) => {
+      formData.append('file', file);
+      formData.append('email', session?.user?.email || '');
+    });
+
+    console.log(formData);
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      // Try to decode the response as text if it's not OK
+      const text = await response.text();
+      throw new Error(`Request failed: ${text}`);
+    }
+
+    // Try to decode the response as JSON if it's OK
+    const data = await response.json();
+    console.log(data);
+  };
 
   return (
     <div className={classes.wrapper}>

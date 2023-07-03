@@ -49,6 +49,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const readStream = fs.createReadStream(file.filepath); // use `filepath` instead of `path`
       const uploadStream = bucket.openUploadStream(file.originalFilename); // use `originalFilename` instead of `name`
 
+      // Attach the email field to the file metadata
+      uploadStream.options.metadata = {
+        email: data.fields.email || '', // Provide a default value if email is undefined
+      };
+
       readStream.pipe(uploadStream);
 
       uploadStream.on('finish', () => {

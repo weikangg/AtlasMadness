@@ -1,7 +1,8 @@
-import { Tabs, TabsProps, rem, TabsValue } from '@mantine/core';
+import { Tabs, TabsProps, rem, TabsValue, Center } from '@mantine/core';
 import { IconFileText, IconVideo } from '@tabler/icons-react';
 import { useState } from 'react';
-import {DropzoneNotesButton, DropzoneVideoButton} from './DropzoneButton';
+import { DropzoneNotesButton, DropzoneVideoButton } from './DropzoneButton';
+import { useSession } from 'next-auth/react';
 
 function StyledTabs(props: TabsProps) {
   return (
@@ -64,6 +65,7 @@ function StyledTabs(props: TabsProps) {
 
 export default function UploadTabs() {
   const [active, setActive] = useState<TabsValue>('notes');
+  const { data: session } = useSession();
 
   const handleTabChange = (value: TabsValue) => {
     if (value !== null) {
@@ -71,21 +73,29 @@ export default function UploadTabs() {
     }
   };
   return (
-    <div>
-      <StyledTabs onTabChange={handleTabChange} defaultValue={"notes"}>
-        <Tabs.List>
-          <Tabs.Tab value="notes" icon={<IconFileText size="1rem" />}>
-            Upload Notes
-          </Tabs.Tab>
-          <Tabs.Tab value="video" icon={<IconVideo size="1rem" />}>
-            Upload Lecture Video
-          </Tabs.Tab>
-        </Tabs.List>
-      </StyledTabs>
+    <>
+      {session ? (
+        <div>
+          <StyledTabs onTabChange={handleTabChange} defaultValue={'notes'}>
+            <Tabs.List>
+              <Tabs.Tab value="notes" icon={<IconFileText size="1rem" />}>
+                Upload Notes
+              </Tabs.Tab>
+              <Tabs.Tab value="video" icon={<IconVideo size="1rem" />}>
+                Upload Lecture Video
+              </Tabs.Tab>
+            </Tabs.List>
+          </StyledTabs>
 
-      {active === 'notes' && <DropzoneNotesButton/>}
+          {active === 'notes' && <DropzoneNotesButton />}
 
-      {active === 'video' && <DropzoneVideoButton/>}
-    </div>
+          {active === 'video' && <DropzoneVideoButton />}
+        </div>
+      ) : (
+        <Center maw={400} h={100} mx="auto">
+          <strong>Sign in to upload</strong>
+        </Center>
+      )}
+    </>
   );
 }
