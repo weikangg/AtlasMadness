@@ -25,7 +25,7 @@ export default function HomePage() {
         </p>
         <Image className={classes.img} src={test.src} />
       </div>
-      <SummarizeButton/>
+      {/* <SummarizeButton/> */}
       <ArticleSection />
     </>
   );
