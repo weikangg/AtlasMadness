@@ -13,23 +13,23 @@ const useStyles = createStyles((theme) => ({
     searchInput: {
       width:'500px',
       padding: rem(8),
-      marginRight: rem(8),
+      marginRight: rem(5),
       borderRadius:'10px',
-      borderColor:'white',
+      // borderColor:'white',
     },
     searchButton: {
       padding: `${rem(8)} ${rem(16)}`,
-      // color: theme.white,
+      color: theme.white,
       border: 'none',
       cursor: 'pointer',
       borderRadius:'10px',
+      borderColor:'white',
       fontWeight:'bold',
       fontSize:'20px',
     },
     bar: {
-      // width:'100%',
-      borderColor:'white',
-      borderWidth:'10px',
+      // backgroundColor:'grey',
+      borderRadius:'10px',
     }
 }));
 
