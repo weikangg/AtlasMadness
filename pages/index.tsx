@@ -1,4 +1,5 @@
 import ArticleSection from '../components/ArticleSection';
+import { useState } from 'react';
 import { Image } from '@mantine/core';
 import test from '../images/banner.png';
 import { createStyles, rem } from '@mantine/core';
@@ -12,6 +13,21 @@ const useStyles = createStyles((theme) => ({
 
 export default function HomePage() {
   const { classes } = useStyles();
+  const [summary, setSummary] = useState<string | null>(null);
+
+  const handleSummarizeClick = async () => {
+    try {
+      // Perform API request to summarize the text
+      // Update the 'summary' state with the result
+
+      // Example API request
+      const response = await fetch('../api/generateSummary');
+      const data = await response.json();
+      setSummary(data.summary);
+    } catch (error) {
+      console.error('Error summarizing text:', error);
+    }
+  };
 
   return (
     <>
@@ -24,8 +40,14 @@ export default function HomePage() {
           a matter of seconds.
         </p>
         <Image className={classes.img} src={test.src} />
+        <SummarizeButton onClick={handleSummarizeClick} />
+        {summary && (
+          <div>
+            <h2>Summary:</h2>
+            <p>{summary}</p>
+          </div>
+        )}
       </div>
-      {/* <SummarizeButton/> */}
       <ArticleSection />
     </>
   );

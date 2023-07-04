@@ -1,30 +1,20 @@
 import { useState } from 'react';
 import { Button } from '@mantine/core';
-import summarizeFiles from '/Users/kane/Documents/GitHub/AtlasMadness/pages/api/summarizeFiles'; // Import your API function
 
-const TextSummarizer = () => {
-  const [summary, setSummary] = useState<string | null>(null);
+const SummarizeButton = ({ onClick }: { onClick: () => void }) => {
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSummarizeClick = async () => {
-    try {
-      const result = await summarizeFiles();
-      setSummary(result);
-    } catch (error) {
-      console.error('Error summarizing files:', error);
-    }
+  const handleButtonClick = async () => {
+    setIsLoading(true);
+    await onClick();
+    setIsLoading(false);
   };
 
   return (
-    <div>
-      <Button onClick={handleSummarizeClick}>Summarize Text</Button>
-      {summary && (
-        <div>
-          <h2>Summary:</h2>
-          <p>{summary}</p>
-        </div>
-      )}
-    </div>
+    <Button onClick={handleButtonClick} loading={isLoading}>
+      {isLoading ? 'Summarizing...' : 'Summarize Text'}
+    </Button>
   );
 };
 
-export default TextSummarizer;
+export default SummarizeButton;
