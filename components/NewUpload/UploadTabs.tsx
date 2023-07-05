@@ -56,6 +56,7 @@ function StyledTabs(props: TabsProps) {
 
         tabsList: {
           display: 'flex',
+          justifyContent: 'center'
         },
       })}
       {...props}
