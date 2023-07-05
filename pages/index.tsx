@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Image } from '@mantine/core';
 import test from '../images/banner.png';
 import { createStyles, rem } from '@mantine/core';
-import SummarizeButton from '../components/SummarizeContent/SummarizeButton';
 
 const useStyles = createStyles((theme) => ({
   img: {
@@ -40,7 +39,6 @@ export default function HomePage() {
           a matter of seconds.
         </p>
         <Image className={classes.img} src={test.src} />
-        <SummarizeButton onClick={handleSummarizeClick} />
         {summary && (
           <div>
             <h2>Summary:</h2>
