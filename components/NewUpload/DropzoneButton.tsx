@@ -52,9 +52,13 @@ export function DropzoneNotesButton() {
       throw new Error(`Request failed: ${text}`);
     }
 
-    // Try to decode the response as JSON if it's OK
     const data = await response.json();
     console.log(data);
+    // New: Display the summary
+    if (data.summary) {
+      alert(`Summary of the uploaded document: ${data.summary}`);
+    }
+  
   };
 
   return (
@@ -64,7 +68,7 @@ export function DropzoneNotesButton() {
         onDrop={handleDrop}
         className={classes.dropzone}
         radius="md"
-        accept={[MIME_TYPES.pdf, MIME_TYPES.ppt, MIME_TYPES.pptx]}
+        accept={[MIME_TYPES.pdf, MIME_TYPES.ppt, MIME_TYPES.pptx, MIME_TYPES.docx]}
         maxSize={30 * 1024 ** 2}
       >
         <div style={{ pointerEvents: 'none' }}>

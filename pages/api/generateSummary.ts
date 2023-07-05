@@ -30,8 +30,8 @@ const summarizeContent = async (content: string): Promise<string> => {
   // Make a request to the OpenAI API to generate the summary
   const response = await openai.createCompletion({
     model: 'text-davinci-003', // Choose the appropriate OpenAI model
-    prompt,
-    max_tokens: 100, // Adjust the maximum number of tokens as needed
+    prompt: prompt,
+    max_tokens: 1000, // Adjust the maximum number of tokens as needed
     temperature: 0.7, // Adjust the temperature for controlling randomness
     n: 1, // Generate a single response
     stop: '\n', // Stop generation at the first line break

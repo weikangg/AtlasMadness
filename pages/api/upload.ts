@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { MongoClient, Db, GridFSBucket } from 'mongodb';
 import { IncomingForm } from 'formidable';
 import fs from 'fs';
+import { OpenAIApi, Configuration } from 'openai';
+import { convertToHtml } from 'mammoth/mammoth.browser';
 
 export const config = {
   api: {
@@ -19,6 +21,48 @@ const connectToDatabase = async (): Promise<Db> => {
     console.error('Error connecting to database: ', error); // Added error logging
     throw error;
   }
+};
+
+const extractDocxContent = async (buffer: Buffer): Promise<string> => {
+  const result = await convertToHtml({ arrayBuffer: buffer });
+
+  if (result.messages.length > 0) {
+    throw new Error('Error extracting content from .docx file');
+  }
+  return result.value;
+};
+
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+// Summarize the content using OpenAI
+const summarizeContent = async (content: string): Promise<string> => {
+  // Remove the opening and closing paragraph tags
+  const cleanedContent = content.slice(3, -4);
+
+  const prompt = `${cleanedContent} \n\nTl;dr`;
+
+  // Create an instance of OpenAI with your API key
+  const openai = new OpenAIApi(configuration);
+
+  // Make a request to the OpenAI API to generate the summary
+  const response = await openai.createCompletion({
+    model: 'text-davinci-003', // Choose the appropriate OpenAI model
+    prompt: prompt,
+    max_tokens: 1000, // Adjust the maximum number of tokens as needed
+    temperature: 0.7, // Adjust the temperature for controlling randomness
+    n: 1, // Generate a single response
+    stop: ['\n', '.', '!', '?'], // List of stop sequences
+  });
+
+  // Log the first choice object
+  console.log(response.data.choices[0]);
+
+  // Extract the summary from the response
+  const summary = response.data.choices[0]?.text?.trim() || '';
+
+  return summary;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -56,9 +100,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       readStream.pipe(uploadStream);
 
-      uploadStream.on('finish', () => {
-        res.status(200).json({ message: 'File uploaded successfully' });
-        return;
+      uploadStream.on('finish', async (file: any) => {
+        try {
+          const fileContent: any = [];
+          const readStream = bucket.openDownloadStream(file._id);
+          readStream.on('data', (chunk) => {
+            fileContent.push(chunk);
+          });
+          readStream.on('end', async () => {
+            const buffer = Buffer.concat(fileContent);
+            const textContent = await extractDocxContent(buffer);
+            const summary = await summarizeContent(textContent);
+            res.status(200).json({ message: 'File uploaded and summarized successfully', summary });
+            return;
+          });
+        } catch (error) {
+          res.status(500).json({ error: 'Error summarizing file content' });
+        }
       });
 
       uploadStream.on('error', (error) => {
