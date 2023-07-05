@@ -155,12 +155,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           readStream.on('end', async () => {
             const buffer = Buffer.concat(fileContent);
 
-            // you use the file's original file name to determine its extension
-            const extension = path.extname(file.filename).slice(1); // slice(1) removes the leading '.'
+            const extension = path.extname(file.filename).slice(1);
             let textContent = '';
 
-            // Then, you use the extension to determine how to extract the text
-            // Note: you might want to handle the case where the extension is neither 'pdf' nor 'docx'
             if (extension === 'pdf') {
               textContent = await extractPdfContent(buffer);
               isDocx = false;
@@ -170,6 +167,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               throw new Error('Unsupported file type');
             }
             const summary = await summarizeContent(textContent, isDocx);
+
+            // Save the summary to MongoDB, linked to the ID of the original document
+            const summariesCollection = db.collection('summaries'); // replace 'summaries' with your collection's name
+            await summariesCollection.insertOne({ fileId: file._id, summary });
+
             res.status(200).json({ message: 'File uploaded and summarized successfully', summary });
             return;
           });
