@@ -14,7 +14,7 @@ npm run dev
 
 To Use Google Cloud Applications API Key
 
-- Download "capable-bliss-378816-9458a5c4bedd.json", place it in downloads. This is the service-account-file.json.
+- Download "capable-bliss-378816-9458a5c4bedd.json", place it anywhere but note the path. This is the service-account-file.json.
 
 - Run the following command in Powershell:
 ```
