@@ -12,6 +12,29 @@ Run Development server
 npm run dev
 ```
 
+To Use Google Cloud Applications API Key
+
+- Download "capable-bliss-378816-9458a5c4bedd.json", place it in downloads. This is the service-account-file.json.
+
+- Run the following command in Powershell:
+```
+$env:GOOGLE_APPLICATION_CREDENTIALS="C:\path\to\your\service-account-file.json"
+```
+
+- Or in Command Prompt:
+```
+set GOOGLE_APPLICATION_CREDENTIALS="C:\path\to\your\service-account-file.json"
+```
+
+- Or in Unix-like shell (like bash):
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/service-account-file.json"
+
+Make sure to replace /path/to/your/service-account-file.json or C:\path\to\your\service-account-file.json with the actual path to your service account key JSON file.
+
+Remember, this sets the environment variable for the current shell session only. If you close the shell or open a new one, you'll need to set the variable again. To make it permanent, you'll need to add the export or set command to your shell's profile or startup file, or set the environment variable in your system settings, which is different for each operating system.
+
+For security, don't forget to keep your service account key JSON file secure. Never commit it to a public repository or expose it in any public manner.
+
 ## Mantine Next Template
 
 Get started with Mantine + Next with just a few button clicks.

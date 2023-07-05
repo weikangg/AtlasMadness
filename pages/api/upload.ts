@@ -4,6 +4,9 @@ import { IncomingForm } from 'formidable';
 import fs from 'fs';
 import { OpenAIApi, Configuration } from 'openai';
 import { convertToHtml } from 'mammoth/mammoth.browser';
+import path from 'path';
+
+const { DocumentProcessorServiceClient } = require('@google-cloud/documentai').v1;
 
 export const config = {
   api: {
@@ -23,6 +26,42 @@ const connectToDatabase = async (): Promise<Db> => {
   }
 };
 
+const extractPdfContent = async (buffer: Buffer): Promise<string> => {
+  // Initialize client
+  const client = new DocumentProcessorServiceClient();
+
+  // Add your Google Cloud project ID, location, and processor ID here
+  const projectId = 'capable-bliss-378816';
+  const location = 'us';
+  const processorId = '9b70de812ae7194a';
+
+  const name = `projects/${projectId}/locations/${location}/processors/${processorId}`;
+
+  // Convert the buffer data to base64
+  const encodedImage = Buffer.from(buffer).toString('base64');
+
+  const request = {
+    name,
+    rawDocument: {
+      content: encodedImage,
+      mimeType: 'application/pdf',
+    },
+  };
+
+  // Process the document
+  const [result] = await client.processDocument(request);
+  let { text } = result.document;
+
+  // Trim middle white spaces
+  text = text.replace(/\s+/g, ' ').trim();
+  // Check if the last character is a period
+  if (text && text.length > 0 && text[text.length - 1] !== '.') {
+    // Append a period at the end
+    text += '.';
+  }
+  return text;
+};
+
 const extractDocxContent = async (buffer: Buffer): Promise<string> => {
   const result = await convertToHtml({ arrayBuffer: buffer });
 
@@ -37,11 +76,16 @@ const configuration = new Configuration({
 });
 
 // Summarize the content using OpenAI
-const summarizeContent = async (content: string): Promise<string> => {
+const summarizeContent = async (content: string, isDocx: boolean): Promise<string> => {
+  let cleanedContent = content;
+
   // Remove the opening and closing paragraph tags
-  const cleanedContent = content.slice(3, -4);
+  if (isDocx) {
+    cleanedContent = cleanedContent.slice(3, -4);
+  }
 
   const prompt = `${cleanedContent} \n\nTl;dr`;
+  console.log(prompt);
 
   // Create an instance of OpenAI with your API key
   const openai = new OpenAIApi(configuration);
@@ -103,14 +147,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       uploadStream.on('finish', async (file: any) => {
         try {
           const fileContent: any = [];
+          let isDocx: boolean = true;
           const readStream = bucket.openDownloadStream(file._id);
           readStream.on('data', (chunk) => {
             fileContent.push(chunk);
           });
           readStream.on('end', async () => {
             const buffer = Buffer.concat(fileContent);
-            const textContent = await extractDocxContent(buffer);
-            const summary = await summarizeContent(textContent);
+
+            // you use the file's original file name to determine its extension
+            const extension = path.extname(file.filename).slice(1); // slice(1) removes the leading '.'
+            let textContent = '';
+
+            // Then, you use the extension to determine how to extract the text
+            // Note: you might want to handle the case where the extension is neither 'pdf' nor 'docx'
+            if (extension === 'pdf') {
+              textContent = await extractPdfContent(buffer);
+              isDocx = false;
+            } else if (extension === 'docx') {
+              textContent = await extractDocxContent(buffer);
+            } else {
+              throw new Error('Unsupported file type');
+            }
+            const summary = await summarizeContent(textContent, isDocx);
             res.status(200).json({ message: 'File uploaded and summarized successfully', summary });
             return;
           });
