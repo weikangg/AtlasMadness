@@ -1,6 +1,9 @@
+"use client";
 import ArticleCard from '../components/ArticleCard';
 import SearchBar from '../components/SearchBar';
 import { useEffect, useState } from 'react';
+import { rem } from '@mantine/core';
+import { useRef } from 'react';
 
 import {
     Card,
@@ -26,17 +29,42 @@ const useStyles = createStyles((theme) => ({
         flexDirection:'column',
         justifyContent: 'center',
         alignItems: 'center',
-    }
+    },
+    searchBar: {
+        width:'100%',
+        display: 'flex',
+        alignItems: 'center',
+        borderRadius:'5px'
+      },
+      searchInput: {
+        width:'500px',
+        padding: rem(8),
+        marginRight: rem(5),
+        borderRadius:'10px',
+        // borderColor:'white',
+      },
+      searchButton: {
+        padding: `${rem(8)} ${rem(16)}`,
+        color: theme.white,
+        border: 'none',
+        cursor: 'pointer',
+        borderRadius:'10px',
+        borderColor:'white',
+        fontWeight:'bold',
+        fontSize:'20px',
+        width:"48px",
+      },
+      bar: {
+        // backgroundColor:'grey',
+        borderRadius:'10px',
+      }
 }));
 
 export default function ArticleSection() {
+    const inputRef = useRef<HTMLInputElement>(null);
     const { classes } = useStyles();
-    const handleSearch = (query: string) => {
-        // Perform search logic here with the query
-        console.log('Search query:', query);
-    };
-
     const [notes, setNotes] = useState<Note[]>([]);
+    const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
 
     useEffect(() => {
         const getNotes = async () => {
@@ -44,16 +72,41 @@ export default function ArticleSection() {
             const data = await response.json();
             console.log(data);
             setNotes(Array.isArray(data) ? data : []);
+            setFilteredNotes(Array.isArray(data) ? data : []);
+
         };
         getNotes();
     }, []);
 
+    const handleSearch = (query: string) => {
+        const filtered = notes.filter((note) =>
+            note.filename.toLowerCase().includes(inputRef.current?.value?.toLowerCase() || "")
+        );
+        setFilteredNotes(filtered);
+    };
+
     return (
         <div className={classes.header}>
             <h2 >Search through our database of over 10 thousand notes!</h2>
-            <SearchBar onSearch={handleSearch} />
+            {/* <SearchBar onSearch={handleSearch} /> */}
+            <div className={classes.bar}>
+                <div className={classes.searchBar}>
+                <input
+                    type="text"
+                    placeholder="Search Here..."
+                    className={classes.searchInput}
+                    ref={inputRef}
+                />
+                <button
+                    className={classes.searchButton}
+                    onClick={handleSearch}
+                >
+                    <svg className="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
+                </button>
+                </div>
+            </div>
             <Card className= {classes.card} >
-                {notes.map((note, index) => (
+                {filteredNotes.map((note, index) => (
                     <ArticleCard
                         key={index}
                         image="https://i.imgur.com/Cij5vdL.png"  
