@@ -18,6 +18,8 @@ import {
   ScrollArea,
   rem,
   Modal,
+  Avatar,
+  Container,
 } from '@mantine/core';
 import { MantineLogo } from '@mantine/ds';
 import { useDisclosure } from '@mantine/hooks';
@@ -228,9 +230,15 @@ export function HeaderMegaMenu() {
           </Group>
           <Group className={classes.hiddenMobile}>
             {session ? (
-              <Button variant="default" onClick={() => signOut()}>
-                Sign Out
-              </Button>
+              <>
+                <Group>
+                  <Avatar radius="xl" />
+                  <Text>{session?.user?.name}</Text>
+                </Group>
+                <Button variant="default" onClick={() => signOut()}>
+                  Sign Out
+                </Button>
+              </>
             ) : (
               <Button variant="default" onClick={openModal}>
                 {' '}
