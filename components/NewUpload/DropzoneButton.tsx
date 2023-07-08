@@ -36,7 +36,6 @@ export function DropzoneNotesButton({
 }) {
   const { classes, theme } = useStyles();
   const openRef = useRef<() => void>(null);
-  const { data: session } = useSession();
 
   const handleDrop = async (acceptedFiles: any) => {
     setUploadedFile(acceptedFiles[0]);
