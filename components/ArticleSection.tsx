@@ -1,10 +1,9 @@
 'use client';
 import ArticleCard from '../components/ArticleCard';
-import SearchBar from '../components/SearchBar';
+import { Pagination } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { rem } from '@mantine/core';
 import { useRef } from 'react';
-import { Pagination } from '@mantine/core';
 import { Card, createStyles } from '@mantine/core';
 
 type Note = {
@@ -59,28 +58,23 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
+// Items per page
+const ITEMS_PER_PAGE = 6;
+
 export default function ArticleSection() {
   const inputRef = useRef<HTMLInputElement>(null);
   const { classes } = useStyles();
   const [notes, setNotes] = useState<Note[]>([]);
   const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
 
+  // Add state for current page
+  const [currentPage, setCurrentPage] = useState(1);
+
   useEffect(() => {
     const getNotes = async () => {
       const response = await fetch('/api/allFiles');
       const data = await response.json();
       console.log(data);
-      setNotes(Array.isArray(data) ? data : []);
-      setFilteredNotes(Array.isArray(data) ? data : []);
-    };
-    getNotes();
-  }, []);
-  useEffect(() => {
-    const getNotes = async () => {
-      const response = await fetch('/api/allFiles');
-      const data = await response.json();
-      console.log(data);
-      console.log('test');
       setNotes(Array.isArray(data) ? data : []);
       setFilteredNotes(Array.isArray(data) ? data : []);
     };
@@ -93,6 +87,11 @@ export default function ArticleSection() {
     );
     setFilteredNotes(filtered);
   };
+  // Adjust the notes you are rendering based on the current page
+  const notesToRender = filteredNotes.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   return (
     <div className={classes.header}>
@@ -123,7 +122,7 @@ export default function ArticleSection() {
         </div>
       </div>
       <Card className={classes.card}>
-        {filteredNotes.map((note, index) => (
+        {notesToRender.map((note, index) => (
           <ArticleCard
             key={index}
             image="https://i.imgur.com/Cij5vdL.png"
@@ -139,8 +138,19 @@ export default function ArticleSection() {
           />
         ))}
       </Card>
-      <br />
-      <Pagination total={10} color="gray" />
+      <Pagination
+        total={Math.ceil(filteredNotes.length / ITEMS_PER_PAGE)}
+        onChange={(page: number) => setCurrentPage(page)}
+        radius={1}
+        styles={(theme) => ({
+          control: {
+            '&[data-active]': {
+              backgroundImage: theme.fn.gradient({ from: 'red', to: 'yellow' }),
+              border: 0,
+            },
+          },
+        })}
+      />
     </div>
   );
 }

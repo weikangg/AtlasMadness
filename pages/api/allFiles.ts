@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       let filesData: any = [];
 
       // Create a stream and use it to read filenames from GridFS
-      const stream = bucket.find({}).stream();
+      const stream = bucket.find({}).sort({ _id: -1 }).stream();
 
       stream.on('data', (doc) => {
         // Push each file data to the array

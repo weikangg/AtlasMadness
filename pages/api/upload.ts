@@ -84,8 +84,7 @@ const summarizeContent = async (content: string, isDocx: boolean): Promise<strin
     cleanedContent = cleanedContent.slice(3, -4);
   }
 
-  const prompt = `${cleanedContent} \n\nTl;dr`;
-  console.log(prompt);
+  const prompt = `${cleanedContent} \n\nPlease provide a detailed summary of the above text.`;
 
   // Create an instance of OpenAI with your API key
   const openai = new OpenAIApi(configuration);
@@ -97,16 +96,40 @@ const summarizeContent = async (content: string, isDocx: boolean): Promise<strin
     max_tokens: 1000, // Adjust the maximum number of tokens as needed
     temperature: 0.7, // Adjust the temperature for controlling randomness
     n: 1, // Generate a single response
-    stop: ['\n', '.', '!', '?'], // List of stop sequences
   });
 
-  // Log the first choice object
-  console.log(response.data.choices[0]);
-
   // Extract the summary from the response
-  const summary = response.data.choices[0]?.text?.trim() || '';
+  let summary = response.data.choices[0]?.text?.trim() || '';
+  if (summary[0] == ':') {
+    summary = summary.slice(2);
+  }
 
   return summary;
+};
+
+// Generate QNA using OpenAI
+const generateQnA = async (summary: string): Promise<string> => {
+  const prompt = `Given the summary of the lecture "${summary}", generate 5 question-answer pairs similar to the following example: \n
+    Question: What is the main topic of the lecture?\n
+    Answer: The main topic of the lecture is (main topic from summary). The answers should be sufficiently detailed.`;
+  // Create an instance of OpenAI with your API key
+  const openai = new OpenAIApi(configuration);
+
+  // Make a request to the OpenAI API to generate the summary
+  const response = await openai.createCompletion({
+    model: 'text-davinci-003', // Choose the appropriate OpenAI model
+    prompt: prompt,
+    max_tokens: 1000, // Adjust the maximum number of tokens as needed
+    temperature: 0.7, // Adjust the temperature for controlling randomness
+    n: 1, // Generate a single response
+  });
+
+  // Extract the reply from the response
+  let qna = response.data.choices[0]?.text?.trim() || '';
+  console.log(response.data.choices[0]?.text);
+  console.log(qna);
+
+  return qna;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -170,7 +193,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               throw new Error('Unsupported file type');
             }
             const summary = await summarizeContent(textContent, isDocx);
-
+            const qna = await generateQnA(summary);
             // Save the summary to MongoDB, linked to the ID of the original document
             const summariesCollection = db.collection('summaries'); // replace 'summaries' with your collection's name
             await summariesCollection.insertOne({
@@ -178,6 +201,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               title: data.fields.title || '',
               description: data.fields.description || '',
               summary,
+              qna,
             });
 
             res.status(200).json({ message: 'File uploaded and summarized successfully', summary });
