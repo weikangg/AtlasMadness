@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import ArticleCard from '../../components/ArticleCard';
 import ArticleSection from '../../components/ArticleSection';
 import { Card, createStyles, Center } from '@mantine/core';
-import { useSession } from 'next-auth/react';
 
 type Note = {
   _id: string;
@@ -29,7 +28,6 @@ const useStyles = createStyles((theme) => ({
 export default function AllNotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
   const { classes } = useStyles();
-  const { data: session } = useSession();
 
   useEffect(() => {
     const getNotes = async () => {
@@ -39,15 +37,13 @@ export default function AllNotesPage() {
     };
 
     getNotes();
-  }, [session]);
+  }, []);
 
   return (
-    <>
-      {session ? (
-        <div className={classes.header}>
-          <h1>All Notes</h1>
-          <ArticleSection/>
-          {/* <Card className={classes.card}>
+    <div className={classes.header}>
+      <h1>All Notes</h1>
+      <ArticleSection />
+      {/* <Card className={classes.card}>
             {notes.map((note, index) => (
               <ArticleCard
                 key={index}
@@ -64,12 +60,6 @@ export default function AllNotesPage() {
               />
             ))}
           </Card> */}
-        </div>
-      ) : (
-        <Center maw={400} h={100} mx="auto">
-          <strong>Sign in to view your notes</strong>
-        </Center>
-      )}
-    </>
+    </div>
   );
 }
