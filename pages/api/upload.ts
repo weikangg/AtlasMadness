@@ -137,7 +137,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const readStream = fs.createReadStream(file.filepath); // use `filepath` instead of `path`
       const uploadStream = bucket.openUploadStream(file.originalFilename); // use `originalFilename` instead of `name`
 
-      // Attach the email field to the file metadata
+      // Attach the email & name field to the file metadata
       uploadStream.options.metadata = {
         title: data.fields.title || '',
         description: data.fields.description || '',
@@ -171,11 +171,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             // Save the summary to MongoDB, linked to the ID of the original document
             const summariesCollection = db.collection('summaries'); // replace 'summaries' with your collection's name
-            await summariesCollection.insertOne({ 
-              fileId: file._id, 
+            await summariesCollection.insertOne({
+              fileId: file._id,
               title: data.fields.title || '',
               description: data.fields.description || '',
-              summary 
+              summary,
             });
 
             res.status(200).json({ message: 'File uploaded and summarized successfully', summary });
