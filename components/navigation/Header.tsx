@@ -37,6 +37,8 @@ import { ColorSchemeToggle } from '../ColorSchemeToggle/ColorSchemeToggle';
 import { useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { AuthenticationForm } from '../AuthForm';
+import  SummAIzeLogo  from '../../images/summAIze.png';
+import { StaticImageData } from 'next/image';
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -96,6 +98,10 @@ const useStyles = createStyles((theme) => ({
       display: 'none',
     },
   },
+  header : {
+    height:'80px',
+    maxHeight:'100px'
+  }
 }));
 
 const mockdata = [
@@ -132,6 +138,7 @@ const mockdata = [
 ];
 
 export function HeaderMegaMenu() {
+  const logoSrc = (SummAIzeLogo as StaticImageData).src;
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
   const { classes, theme } = useStyles();
@@ -166,16 +173,15 @@ export function HeaderMegaMenu() {
   ));
 
   return (
-    <Box pb="md">
-      <Header height={60} px="md">
-        <Group position="apart" sx={{ height: '100%' }}>
-          <MantineLogo size={30} />
-
+    <Box pb="md" >
+      <Header height={60} px="md" className={classes.header}>
+        <Group position="apart" sx={{ height: '100%', marginBottom:'80px'}}>
+          <img src={logoSrc} alt="SummAIze Logo" style={{ width: '130px', height: 'auto'}} />
           <Group sx={{ height: '100%' }} spacing={0} className={classes.hiddenMobile}>
             <Link href="/" className={classes.link}>
               Home
             </Link>
-            <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
+            {/* <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
               <HoverCard.Target>
                 <Link href="#" className={classes.link}>
                   <Center inline>
@@ -219,7 +225,7 @@ export function HeaderMegaMenu() {
                   </Group>
                 </div>
               </HoverCard.Dropdown>
-            </HoverCard>
+            </HoverCard> */}
             <Link href="/bookmarks" className={classes.link}>
               Bookmarks
             </Link>

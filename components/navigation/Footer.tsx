@@ -6,9 +6,8 @@ import { StaticImageData } from 'next/image';
 
 const useStyles = createStyles((theme) => ({
   footer: {
-    marginTop: rem(120),
+    marginTop: rem(60),
     paddingTop: `calc(${theme.spacing.xl} * 2)`,
-    paddingBottom: `calc(${theme.spacing.xl} * 2)`,
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
     borderTop: `${rem(1)} solid ${
       theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]
@@ -136,9 +135,9 @@ export function FooterLinks({ data }: FooterLinksProps) {
     <footer className={classes.footer}>
       <Container className={classes.inner}>
         <div className={classes.logo}>
-          <img src={logoSrc} alt="SummAIze Logo" style={{ width: '200px', height: 'auto' }} />
+          <img src={logoSrc} alt="SummAIze Logo" style={{ width: '200px', height: 'auto', marginBottom:'10px' }} />
           <Text size="xs" color="dimmed" className={classes.description}>
-            We as dawgs are able to build fully functional accessible web applications faster than ever
+            Helping students take in knowledge one summarized note at a time
           </Text>
         </div>
         <div className={classes.groups}>{groups}</div>
