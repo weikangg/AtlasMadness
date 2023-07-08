@@ -11,8 +11,8 @@ type Note = {
   _id: string;
   filename: string;
   length: number;
-  fileAuthor: string;
-  fileTitle: string;
+  userName: string;
+  title: string;
 };
 
 type ArticleSectionProps = {
@@ -78,7 +78,7 @@ export default function ArticleSection({ notes }: ArticleSectionProps) {
 
   const handleSearch = (query: string) => {
     const regex = new RegExp(query, 'i');
-    const filtered = notes.filter((note) => regex.test(note.fileTitle));
+    const filtered = notes.filter((note) => regex.test(note.title));
     setFilteredNotes(filtered);
   };
 
@@ -101,11 +101,11 @@ export default function ArticleSection({ notes }: ArticleSectionProps) {
             articleId={note._id}
             image="https://i.imgur.com/Cij5vdL.png"
             link={`/details/${note._id}`}
-            title={note.fileTitle}
+            title={note.title}
             description={`${note.length} bytes`}
             rating="outstanding"
             author={{
-              name: note.fileAuthor,
+              name: note.userName,
               image:
                 'https://images.unsplash.com/photo-1593229874334-90d965f27c42?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
             }}

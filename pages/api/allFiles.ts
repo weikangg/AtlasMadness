@@ -31,8 +31,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         filesData.push({
           filename: doc.filename,
           length: doc.length,
-          fileAuthor: doc.metadata.userName,
-          fileTitle: doc.metadata.title,
+          userName: doc.metadata.userName,
+          title: doc.metadata.title,
           _id: doc._id.toString(),
         });
       });

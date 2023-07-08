@@ -46,27 +46,24 @@ const getData = async (authDb: Db, bookmarkId: ObjectId): Promise<any> => {
     filename: file.filename,
     length: file.length,
     data: fileData,
-    title: summary.title,
+    title: file.metadata.title, // retrieve title from metadata
+    userName: file.metadata.userName, // retrieve userName from metadata
     description: summary.description,
     summary: summary.summary,
   };
-};
+};  
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     try {
       const email = req.query.email;
-      console.log(email);
       const testDb = await connectToDatabase('test');
       const authDb = await connectToDatabase('Auth');
 
       const user = await testDb.collection('users').findOne({ email: email });
-      console.log(user);
       if (user) {
         const bookmarks = user.bookmarks;
-        console.log(bookmarks);
         const dataPromises = bookmarks.map((id: string) => getData(authDb, new ObjectId(id)));
         const data = await Promise.allSettled(dataPromises);
-        console.log(data);
         const successfulData = data
           .filter((result) => result.status === 'fulfilled')
           .map((result: any) => result.value);
