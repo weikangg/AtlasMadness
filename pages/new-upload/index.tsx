@@ -3,6 +3,7 @@ import { TextInputs } from '../../components/NewUpload/TextInputs';
 import { SubmitButton } from '../../components/NewUpload/SubmitButton';
 import { createStyles } from '@mantine/core';
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 
 const useStyles = createStyles(() => ({
   uploadContainer: {
@@ -17,6 +18,8 @@ export default function NewUploadPage() {
   const [fileName, setFileName] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
+  const { data: session } = useSession();
+
   const onUpload = async () => {
     if (!uploadedFile) return;
 
@@ -24,6 +27,8 @@ export default function NewUploadPage() {
     formData.append('file', uploadedFile);
     formData.append('title', title);
     formData.append('description', description);
+    formData.append('userEmail', session?.user?.email || '');
+    formData.append('userName', session?.user?.name || 'syntax');
 
     // Upload the file
     const response = await fetch('/api/upload', {

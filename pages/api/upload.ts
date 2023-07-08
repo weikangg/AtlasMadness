@@ -141,6 +141,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       uploadStream.options.metadata = {
         title: data.fields.title || '',
         description: data.fields.description || '',
+        userEmail: data.fields.userEmail || '',
+        userName: data.fields.userName || '',
       };
 
       readStream.pipe(uploadStream);
