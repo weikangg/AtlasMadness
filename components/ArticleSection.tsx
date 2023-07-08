@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { rem } from '@mantine/core';
 import { useRef } from 'react';
 import { Card, createStyles } from '@mantine/core';
+import SearchBar from './NewSearchBar';
+
 
 type Note = {
   _id: string;
@@ -81,12 +83,14 @@ export default function ArticleSection() {
     getNotes();
   }, []);
 
-  const handleSearch = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleSearch = (query: string) => {
+    const regex = new RegExp(query, 'i');
     const filtered = notes.filter((note) =>
-      note.filename.toLowerCase().includes(inputRef.current?.value?.toLowerCase() || '')
+      regex.test(note.fileTitle)
     );
     setFilteredNotes(filtered);
   };
+
   // Adjust the notes you are rendering based on the current page
   const notesToRender = filteredNotes.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
@@ -96,8 +100,8 @@ export default function ArticleSection() {
   return (
     <div className={classes.header}>
       <h2>Search through our database of over 10 thousand notes!</h2>
-      {/* <SearchBar onSearch={handleSearch} /> */}
-      <div className={classes.bar}>
+      <SearchBar onSearch={handleSearch} />
+      {/* <div className={classes.bar}>
         <div className={classes.searchBar}>
           <input
             type="text"
@@ -119,8 +123,8 @@ export default function ArticleSection() {
               ></path>
             </svg>
           </button>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
       <Card className={classes.card}>
         {notesToRender.map((note, index) => (
           <ArticleCard
