@@ -1,6 +1,8 @@
 import { createStyles, Text, Container, ActionIcon, Group, rem } from '@mantine/core';
 import { IconBrandTwitter, IconBrandYoutube, IconBrandInstagram } from '@tabler/icons-react';
 import { MantineLogo } from '@mantine/ds';
+import  SummAIzeLogo  from '../../images/summAIze.png';
+import { StaticImageData } from 'next/image';
 
 const useStyles = createStyles((theme) => ({
   footer: {
@@ -106,6 +108,7 @@ interface FooterLinksProps {
 }
 
 export function FooterLinks({ data }: FooterLinksProps) {
+  const logoSrc = (SummAIzeLogo as StaticImageData).src;
   const { classes } = useStyles();
 
   const groups = data.map((group) => {
@@ -133,7 +136,7 @@ export function FooterLinks({ data }: FooterLinksProps) {
     <footer className={classes.footer}>
       <Container className={classes.inner}>
         <div className={classes.logo}>
-          <MantineLogo size={30} />
+          <img src={logoSrc} alt="SummAIze Logo" style={{ width: '200px', height: 'auto' }} />
           <Text size="xs" color="dimmed" className={classes.description}>
             We as dawgs are able to build fully functional accessible web applications faster than ever
           </Text>
@@ -142,7 +145,7 @@ export function FooterLinks({ data }: FooterLinksProps) {
       </Container>
       <Container className={classes.afterFooter}>
         <Text color="dimmed" size="sm">
-          © 2023 Atlas Madness Dawgs. All rights reserved.
+          © 2023 SummAIze All rights reserved.
         </Text>
 
         <Group spacing={0} className={classes.social} position="right" noWrap>

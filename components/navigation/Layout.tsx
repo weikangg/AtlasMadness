@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import { HeaderMegaMenu } from './Header';
 import { FooterLinks } from './Footer';
+import Link from 'next/link';
 
 type LayoutProps = {
   children: ReactNode;
@@ -8,35 +9,19 @@ type LayoutProps = {
 
 const Layout = ({ children }: LayoutProps) => {
   const allLinks = [
-    {
-      title: 'About',
-      links: [
-        {
-          label: 'Features',
-          link: '/',
-        },
-        {
-          label: 'Pricing',
-          link: '/',
-        },
-        {
-          label: 'News',
-          link: '/',
-        },
-        {
-          label: 'FAQ',
-          link: '/',
-        },
-      ],
-    },
-    {
-      title: 'Community',
-      links: [
-        { label: 'Twitter', link: '/' },
-        { label: 'GitHub', link: '/' },
-        { label: 'Discord', link: '/' },
-      ],
-    },
+      {
+        title: 'Features',
+        links: [
+          {
+            label:'View All Notes',
+            link: '/pages/all-notes/index.tsx',
+          },
+          {
+            label:'Upload Notes',
+            link: '/',
+          },
+        ]
+      }
   ];
   return (
     <div>

@@ -30,7 +30,7 @@ export default function HomePage() {
 
   return (
     <>
-      <div style={{ textAlign: 'center', marginTop: '-60px' }}>
+      <div style={{ textAlign: 'center'}}>
         <h1 style={{ fontSize: '65px', fontWeight: 'bold' }}>Welcome to SummAIze</h1>
         <p style={{ fontSize: '20px', paddingLeft: '150px', paddingRight: '150px' }}>
           We are a group of students looking to streamline the process of absorbing information.
