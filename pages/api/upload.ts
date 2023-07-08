@@ -5,6 +5,8 @@ import fs from 'fs';
 import { OpenAIApi, Configuration } from 'openai';
 import { convertToHtml } from 'mammoth/mammoth.browser';
 import path from 'path';
+import ffmpeg from 'fluent-ffmpeg';
+import { SpeechClient, protos } from '@google-cloud/speech';
 
 const { DocumentProcessorServiceClient } = require('@google-cloud/documentai').v1;
 
@@ -69,6 +71,45 @@ const extractDocxContent = async (buffer: Buffer): Promise<string> => {
     throw new Error('Error extracting content from .docx file');
   }
   return result.value;
+};
+
+const extractAudioContent = async (buffer: Buffer): Promise<string> => {
+  const fileName = '/tmp/audio.flac';
+  await new Promise((resolve, reject) => {
+    ffmpeg()
+      .input(buffer)
+      .outputOptions('-ac 1') // Convert audio to mono
+      .outputOptions('-ar 16000') // Sample rate suitable for Speech-to-Text
+      .format('flac')
+      .saveToFile(fileName)
+      .on('end', resolve)
+      .on('error', reject);
+  });
+
+  
+
+  const audio = {
+    content: fs.readFileSync(fileName).toString('base64'),
+  };
+  const config = {
+    encoding: protos.google.cloud.speech.v1.RecognitionConfig.AudioEncoding.FLAC as any,
+    sampleRateHertz: 16000,
+    languageCode: 'en-US',
+  };
+  const request = {
+    audio: audio,
+    config: config,
+  };
+
+  const client = new SpeechClient();
+  const [response] = await client.recognize(request);
+  const transcription = response.results
+  ? response.results
+      .map(result => result.alternatives ? result.alternatives[0].transcript : '')
+      .join('\n')
+  : '';
+
+  return transcription;
 };
 
 const configuration = new Configuration({
@@ -166,6 +207,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               isDocx = false;
             } else if (extension === 'docx') {
               textContent = await extractDocxContent(buffer);
+            } else if (extension === 'mp4') {
+              textContent = await extractAudioContent(buffer);
             } else {
               throw new Error('Unsupported file type');
             }
@@ -181,7 +224,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             });
 
             res.status(200).json({ message: 'File uploaded and summarized successfully', summary });
-            return;
+            return; 
           });
         } catch (error) {
           res.status(500).json({ error: 'Error summarizing file content' });

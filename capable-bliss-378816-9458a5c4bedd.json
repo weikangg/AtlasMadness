@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "capable-bliss-378816",
+  "private_key_id": "9458a5c4bedd6a9f4f50df36eebd158024eca385",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDDm8GylnS30Kxq\nA6+o0deIRduORTGXVc6f+MfM4iGdnVBqMSTOXfDUDK0esb7KVeb6sgwjvXMeF0gL\n9oyCyY5FC/n7kFJLCUaKj6NlWBL/u5P6c4GM3dnznatirusu0t+diu4+4kE4nYjK\n5ebR+AqBaW14Uqq3oicnRZLOC1Ep1TkVSaf3OIvZ1bUPcR6CpDfV2urztWQ0qmbj\ndUuotnmMzvg1hO2x09aQEXbs5q6RNpgnb79178+ZdRnZreFCNw2mIK35KgSTDdkK\nNpxSFIG5EPrqkRVwCux025hUugNpvXcnlQdusImaX8Ahvyzue5F6/aZDC1iwfdq2\no2D5MQ19AgMBAAECggEAC+c+Dcdgs4QQzrC9VayGjT96OvmhKQbq0heAo31wgAr/\n+j5V8YyMG7NO+grlKjxSmBd4OQwnZbTf+85iKMSDXyNGVpWNOtpSvxrUXbxS1HO0\n1eBSiWDbIwG8v+TjrelDyO5lgIRVmLbjCXA2sB9Q44ta9h/9s7s73usGbuBuBqzc\nr711v7BHLF6mN7DRyuPdIn36b9i0SNQBPlkHjxG3Kh1iWliTpGDrW5exQikKwwUX\nHiml+zJjz0M6WWccVxO9HDl/CdFGRhW2MDaSunzPucLTcOrBKhmGsaJo9wnZ0jJO\nazzg7P7Brze8oeemwF8l59Ai6JhCQ5RbuUn9QryVdwKBgQDhVrQWWZy4HiLEnfW4\nYoH7clZrI97TzQhKrnVw7dY+UyeSAPbaf5NM46D0MjMq3AZu9ZdwXSKYGAqcAbWm\nVZJwOhgWcqejpZIRCNqzQltauyPqBZZBTwj/9cg+OdQbmk/MlADfH0gV2gjwisP+\nOJpUC0wAsec9/KcN3yWW7HiCDwKBgQDeOXL/C5kj0jqC6WNst6I2Oq9TW6gBH0CP\nnNLZhfVhTsny6pedUaGRB3Pgnjg7+7R5r9DDgr6HjgIB1mmRxOW33VfRmsK+VAD8\nVQp0r4sZ0lmTA2GEH87IhRcMpi25lvh9utaNcdqhQ63K+MVPTh8gwh5uBuUhEv6M\nCBH710kTswKBgAd9/YDcu+Q3REqrQdc+lznIBG2NhMQgBg2NnWQC1GPAGgm1tH9x\nTHF7BAf6f08Gf8RCsCVRQ2wxKHElcWe1YqgOlmxwpXhAcgnU9IiPRUBQBpKqWuOT\nACaagmznOVEtoUeZCCpi/N+VH0T4KCoUsbTnp0BCqgCanOdOKw7Ij/0rAoGBALS9\ntwk3LrPSzeIh3srSxG0k5+p9drSK7aCgpWFkMcKWKWyYXv4GIclqbVX4ebZXr171\nn28UzNBFsN47vJthsJENxtpk7BWPD0osBJgJGrLCwjXvHwYuNKokjS2tjy0OXEcu\nikh6nJ5jBFw8X4Zz/J9RIxzMINn4r+3GtpHFdNs/AoGAQU0nF5R2HVa1G/RXSr+i\nDP2Afg8d631CRpPcPM7luAEjoFvVCQpgFjsry/utv9gGcJdBpZB0fDwpQSz5CQAx\n1Um1ii5iOqTtWjLCNG9SeCdh6N5axCwZT5TOk1JAFKJaPTqOYkfQEQpeMSi38A4d\nDeHyHOPriTLYGjA0SklKxuQ=\n-----END PRIVATE KEY-----\n",
+  "client_email": "atlasmadness@capable-bliss-378816.iam.gserviceaccount.com",
+  "client_id": "110342307017959469601",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/atlasmadness%40capable-bliss-378816.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
