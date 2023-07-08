@@ -36,3 +36,6 @@ yarn-error.log*
 
 # storybook
 storybook-static
+
+# ignore json key file for Google Key Credentials
+capable-bliss-378816-9458a5c4bedd.json

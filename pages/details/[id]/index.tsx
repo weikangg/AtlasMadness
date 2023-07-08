@@ -2,7 +2,10 @@ import { useRouter } from 'next/router';
 import { TableOfContents } from './tableOfContents';
 import { Grid, Container } from '@mantine/core';
 import { MongoClient, Db, ObjectId } from 'mongodb';
-import { DownloadButton } from '../../../components/details/DownloadButton';
+import {
+  DownloadOriginalButton,
+  DownloadSummaryButton,
+} from '../../../components/details/DownloadButton';
 
 interface Note {
   title: string;
@@ -103,7 +106,12 @@ export default function Page({ note }: PageProps) {
             molestias, fugit nobis mollitia cumque perferendis veniam aliquid? Blanditiis illo
             eveniet suscipit minima ea quam doloribus officiis. Voluptas, consequatur.
           </p>
-          <DownloadButton fileId={note.fileId} />
+          <div style={{ display: 'flex' }}>
+            <DownloadOriginalButton fileId={note.fileId} />
+            <div style={{ marginLeft: '20px' }}>
+              <DownloadSummaryButton summary={note.summary} />
+            </div>
+          </div>
         </Grid.Col>
       </Grid>
     </Container>
