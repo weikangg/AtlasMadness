@@ -66,7 +66,7 @@ export default function ArticleCard({
   ...others
 }: ArticleCardProps & Omit<React.ComponentPropsWithoutRef<'div'>, keyof ArticleCardProps>) {
   const { classes, cx, theme } = useStyles();
-  const linkProps = { href: link, target: '_blank', rel: 'noopener noreferrer' };
+  const linkProps = { href: link, rel: 'noopener noreferrer' };
 
   return (
     <Card withBorder radius="md" className={cx(classes.card, className)} {...others}>

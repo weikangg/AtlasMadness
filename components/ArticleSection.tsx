@@ -70,6 +70,16 @@ export default function ArticleSection() {
       const response = await fetch('/api/allFiles');
       const data = await response.json();
       console.log(data);
+      setNotes(Array.isArray(data) ? data : []);
+      setFilteredNotes(Array.isArray(data) ? data : []);
+    };
+    getNotes();
+  }, []);
+  useEffect(() => {
+    const getNotes = async () => {
+      const response = await fetch('/api/allFiles');
+      const data = await response.json();
+      console.log(data);
       console.log('test');
       setNotes(Array.isArray(data) ? data : []);
       setFilteredNotes(Array.isArray(data) ? data : []);
@@ -117,12 +127,12 @@ export default function ArticleSection() {
           <ArticleCard
             key={index}
             image="https://i.imgur.com/Cij5vdL.png"
-            link={`/api/files/${note._id}`}
+            link={`/details/${note._id}`}
             title={note.fileTitle}
             description={`${note.length} bytes`}
             rating="outstanding"
             author={{
-              name: `${note.fileAuthor}`,
+              name: note.fileAuthor,
               image:
                 'https://images.unsplash.com/photo-1593229874334-90d965f27c42?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
             }}

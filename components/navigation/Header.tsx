@@ -218,10 +218,10 @@ export function HeaderMegaMenu() {
                 </div>
               </HoverCard.Dropdown>
             </HoverCard>
-            <Link href="all-notes" className={classes.link}>
+            <Link href="/all-notes" className={classes.link}>
               All Notes
             </Link>
-            <Link href="new-upload" className={classes.link}>
+            <Link href="/new-upload" className={classes.link}>
               Upload New
             </Link>
             <ColorSchemeToggle />
@@ -267,10 +267,10 @@ export function HeaderMegaMenu() {
             </Center>
           </UnstyledButton>
           <Collapse in={linksOpened}>{links}</Collapse>
-          <Link href="all-notes" className={classes.link}>
+          <Link href="/all-notes" className={classes.link}>
             All Notes
           </Link>
-          <Link href="new-upload" className={classes.link}>
+          <Link href="/new-upload" className={classes.link}>
             Upload New
           </Link>
 
