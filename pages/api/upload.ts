@@ -194,6 +194,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
             const summary = await summarizeContent(textContent, isDocx);
             const qna = await generateQnA(summary);
+            // Split the string into an array
+            let qnaArray = qna.split('\n\n');
+
+            let qnaData = [];
+
+            // Iterate over the array
+            for (let i = 0; i < qnaArray.length; i++) {
+              let qaPair = qnaArray[i].split('\n'); // split each pair into a question and an answer
+              let question = qaPair[0];
+              let answer = qaPair[1];
+              qnaData.push({ question, answer }); // Push the Q&A pair into the array
+            }
+
             // Save the summary to MongoDB, linked to the ID of the original document
             const summariesCollection = db.collection('summaries'); // replace 'summaries' with your collection's name
             await summariesCollection.insertOne({
@@ -201,7 +214,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               title: data.fields.title || '',
               description: data.fields.description || '',
               summary,
-              qna,
+              qna: qnaData,
             });
 
             res.status(200).json({ message: 'File uploaded and summarized successfully', summary });
