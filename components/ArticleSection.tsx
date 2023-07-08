@@ -12,6 +12,7 @@ type Note = {
   filename: string;
   length: number;
   fileAuthor: string;
+  fileTitle: string;
 };
 
 const useStyles = createStyles((theme) => ({
@@ -117,7 +118,7 @@ export default function ArticleSection() {
             key={index}
             image="https://i.imgur.com/Cij5vdL.png"
             link={`/api/files/${note._id}`}
-            title={note.filename}
+            title={note.fileTitle}
             description={`${note.length} bytes`}
             rating="outstanding"
             author={{
