@@ -220,6 +220,9 @@ export function HeaderMegaMenu() {
                 </div>
               </HoverCard.Dropdown>
             </HoverCard>
+            <Link href="/bookmarks" className={classes.link}>
+              Bookmarks
+            </Link>
             <Link href="/all-notes" className={classes.link}>
               All Notes
             </Link>
@@ -275,6 +278,9 @@ export function HeaderMegaMenu() {
             </Center>
           </UnstyledButton>
           <Collapse in={linksOpened}>{links}</Collapse>
+          <Link href="/bookmarks" className={classes.link}>
+            Bookmarks
+          </Link>
           <Link href="/all-notes" className={classes.link}>
             All Notes
           </Link>

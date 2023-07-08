@@ -7,13 +7,16 @@ import { useRef } from 'react';
 import { Card, createStyles } from '@mantine/core';
 import SearchBar from './NewSearchBar';
 
-
 type Note = {
   _id: string;
   filename: string;
   length: number;
   fileAuthor: string;
   fileTitle: string;
+};
+
+type ArticleSectionProps = {
+  notes: Note[];
 };
 
 const useStyles = createStyles((theme) => ({
@@ -63,72 +66,39 @@ const useStyles = createStyles((theme) => ({
 // Items per page
 const ITEMS_PER_PAGE = 6;
 
-export default function ArticleSection() {
+export default function ArticleSection({ notes }: ArticleSectionProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const { classes } = useStyles();
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
-
+  const [filteredNotes, setFilteredNotes] = useState<Note[]>(notes || []);
+  useEffect(() => {
+    setFilteredNotes(notes);
+  }, [notes]);
   // Add state for current page
   const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    const getNotes = async () => {
-      const response = await fetch('/api/allFiles');
-      const data = await response.json();
-      console.log(data);
-      setNotes(Array.isArray(data) ? data : []);
-      setFilteredNotes(Array.isArray(data) ? data : []);
-    };
-    getNotes();
-  }, []);
-
   const handleSearch = (query: string) => {
     const regex = new RegExp(query, 'i');
-    const filtered = notes.filter((note) =>
-      regex.test(note.fileTitle)
-    );
+    const filtered = notes.filter((note) => regex.test(note.fileTitle));
     setFilteredNotes(filtered);
   };
 
   // Adjust the notes you are rendering based on the current page
-  const notesToRender = filteredNotes.slice(
+  const notesToRender = (filteredNotes || []).slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
-
+  if (!filteredNotes) {
+    return <div>Loading...</div>; // Or some other placeholder
+  }
   return (
     <div className={classes.header}>
       <h2>Search through our database of over 10 thousand notes!</h2>
       <SearchBar onSearch={handleSearch} />
-      {/* <div className={classes.bar}>
-        <div className={classes.searchBar}>
-          <input
-            type="text"
-            placeholder="Search Here..."
-            className={classes.searchInput}
-            ref={inputRef}
-          />
-          <button className={classes.searchButton} onClick={handleSearch}>
-            <svg
-              className="w-5 h-5 text-gray-500"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                clip-rule="evenodd"
-              ></path>
-            </svg>
-          </button>
-        </div> */}
-      {/* </div> */}
       <Card className={classes.card}>
         {notesToRender.map((note, index) => (
           <ArticleCard
             key={index}
+            articleId={note._id}
             image="https://i.imgur.com/Cij5vdL.png"
             link={`/details/${note._id}`}
             title={note.fileTitle}

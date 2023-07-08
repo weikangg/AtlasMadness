@@ -1,8 +1,16 @@
 import ArticleSection from '../components/ArticleSection';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Image } from '@mantine/core';
 import test from '../images/banner.png';
 import { createStyles, rem } from '@mantine/core';
+
+type Note = {
+  _id: string;
+  filename: string;
+  length: number;
+  fileAuthor: string;
+  fileTitle: string;
+};
 
 const useStyles = createStyles((theme) => ({
   img: {
@@ -12,21 +20,23 @@ const useStyles = createStyles((theme) => ({
 
 export default function HomePage() {
   const { classes } = useStyles();
-  const [summary, setSummary] = useState<string | null>(null);
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const handleSummarizeClick = async () => {
-    try {
-      // Perform API request to summarize the text
-      // Update the 'summary' state with the result
-
-      // Example API request
-      const response = await fetch('../api/generateSummary');
+  useEffect(() => {
+    const getNotes = async () => {
+      const response = await fetch('/api/allFiles');
       const data = await response.json();
-      setSummary(data.summary);
-    } catch (error) {
-      console.error('Error summarizing text:', error);
-    }
-  };
+      setNotes(Array.isArray(data) ? data : []);
+      setIsLoading(false);
+    };
+
+    getNotes();
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>; // Replace this with a loading spinner or similar if you want.
+  }
 
   return (
     <>
@@ -39,14 +49,8 @@ export default function HomePage() {
           a matter of seconds.
         </p>
         <Image className={classes.img} src={test.src} />
-        {summary && (
-          <div>
-            <h2>Summary:</h2>
-            <p>{summary}</p>
-          </div>
-        )}
       </div>
-      <ArticleSection />
+      <ArticleSection notes={notes} />
     </>
   );
 }
