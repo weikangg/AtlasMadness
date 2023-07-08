@@ -39,7 +39,42 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       } catch (err) {
         return res.status(500).json({ error: 'Unable to bookmark article' });
       }
+    case 'DELETE':
+      try {
+        const { email, articleId } = req.body;
+        if (!email || !articleId) {
+          return res.status(400).json({ error: 'Missing email or articleId' });
+        }
 
+        const db = await connectToDatabase();
+        const user = await db.collection('users').findOneAndUpdate(
+          { email },
+          { $pull: { bookmarks: articleId } }, // Use $pull to remove item from array
+          { returnDocument: 'after' }
+        );
+        console.log('removed bookmark', email);
+        return res.status(200).json(user);
+      } catch (err) {
+        return res.status(500).json({ error: 'Unable to remove bookmark' });
+      }
+      case 'GET':
+        try {
+          const { email, articleId } = req.query;
+          if (!email || !articleId) {
+            return res.status(400).json({ error: 'Missing email or articleId' });
+          }
+  
+          const db = await connectToDatabase();
+          const user = await db.collection('users').findOne({ email });
+          if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+          }
+  
+          const isBookmarked = user.bookmarks.includes(articleId);
+          return res.status(200).json({ isBookmarked });
+        } catch (err) {
+          return res.status(500).json({ error: 'Unable to fetch bookmark status' });
+        }
     default:
       return res.status(405).end(`Method ${method} Not Allowed`);
   }

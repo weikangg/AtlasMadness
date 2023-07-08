@@ -1,4 +1,4 @@
-import { IconBookmark,  IconShare } from '@tabler/icons-react';
+import { IconBookmark, IconShare } from '@tabler/icons-react';
 import {
   Card,
   Image,
@@ -13,6 +13,7 @@ import {
 } from '@mantine/core';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -74,6 +75,22 @@ export default function ArticleCard({
   const { data: session } = useSession();
   const email = session?.user?.email;
   const linkProps = { href: link, rel: 'noopener noreferrer' };
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  // Fetch bookmark status when component mounts
+  useEffect(() => {
+    const fetchBookmarkStatus = async () => {
+      try {
+        const response = await axios.get(
+          `/api/manageBookmarks?email=${email}&articleId=${articleId}`
+        );
+        setIsBookmarked(response.data.isBookmarked);
+      } catch (error) {
+        console.error('Error fetching bookmark status:', error);
+      }
+    };
+
+    fetchBookmarkStatus();
+  }, [email, articleId]); // Depend on email and articleId so it reruns if these change
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -95,12 +112,19 @@ export default function ArticleCard({
 
   const handleBookmark = async () => {
     try {
-      const response = await axios.post('/api/addBookmarks', { email, articleId });
-      // Handle successful bookmarking. Maybe update UI or show a message.
+      let response;
+      if (isBookmarked) {
+        // If currently bookmarked, send DELETE request to remove bookmark
+        response = await axios.delete('/api/manageBookmarks', { data: { email, articleId } });
+      } else {
+        // If not bookmarked, send POST request to add bookmark
+        response = await axios.post('/api/manageBookmarks', { email, articleId });
+      }
       console.log(response.data);
+      // Toggle isBookmarked state after successful operation
+      setIsBookmarked(!isBookmarked);
     } catch (error) {
-      // Handle errors. Maybe show a message to the user.
-      console.error('Error adding bookmark:', error);
+      console.error('Error updating bookmark:', error);
     }
   };
 
@@ -134,7 +158,10 @@ export default function ArticleCard({
 
         <Group spacing={8} mr={0}>
           <ActionIcon className={classes.action} onClick={handleBookmark}>
-            <IconBookmark size="1rem" color={theme.colors.yellow[7]} />
+            <IconBookmark
+              size="1rem"
+              color={isBookmarked ? theme.colors.teal[7] : theme.colors.red[7]}
+            />
           </ActionIcon>
           <ActionIcon className={classes.action} onClick={handleShare}>
             <IconShare size="1rem" />
