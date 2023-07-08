@@ -1,17 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { MongoClient, Db } from 'mongodb';
+import connectToAuthDB from '../../database/authConn';
 
-const connectToDatabase = async (): Promise<Db> => {
-  const client = new MongoClient(process.env.MONGO_URI!);
-  try {
-    await client.connect();
-    const db = client.db('test');
-    return db;
-  } catch (error) {
-    console.error('Error connecting to database: ', error); // Added error logging
-    throw error;
-  }
-};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req;
@@ -26,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           return res.status(400).json({ error: 'Missing email or articleId' });
         }
 
-        const db = await connectToDatabase();
+        const db = await connectToAuthDB();
         const user = await db
           .collection('users')
           .findOneAndUpdate(

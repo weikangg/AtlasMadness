@@ -7,6 +7,7 @@ import {
   DownloadSummaryButton,
 } from '../../../components/details/DownloadButton';
 import { Accordion } from '@mantine/core';
+import connectToAuthDB from '../../../database/authConn';
 
 interface Note {
   title: string;
@@ -20,20 +21,9 @@ interface PageProps {
   note: Note;
 }
 
-const connectToDatabase = async (): Promise<Db> => {
-  const client = new MongoClient(process.env.MONGO_URI!);
-  try {
-    await client.connect();
-    const db = client.db('Auth');
-    return db;
-  } catch (error) {
-    console.error('Error connecting to database: ', error); // Added error logging
-    throw error;
-  }
-};
 
 export async function getServerSideProps(context: any) {
-  const db = await connectToDatabase();
+  const db = await connectToAuthDB();
   const { params } = context;
 
   // Assuming the note's ID is passed as a URL parameter and

@@ -1,20 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { MongoClient, Db } from 'mongodb';
 import { OpenAIApi, Configuration } from 'openai';
+import connectToAuthDB from '../../database/authConn';
 
 // Connect to MongoDB and return the database instance
-const connectToDatabase = async (): Promise<Db> => {
-  const client = new MongoClient(process.env.MONGO_URI!);
-  try {
-    await client.connect();
-    console.log('Successfully connected to MongoDB');
-    const db = client.db('Auth'); // Replace with your database name
-    return db;
-  } catch (error) {
-    console.error('Error connecting to MongoDB: ', error);
-    throw error;
-  }
-};
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -47,7 +36,7 @@ const summarizeContent = async (content: string): Promise<string> => {
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     // Connect to MongoDB
-    const db = await connectToDatabase();
+    const db = await connectToAuthDB();
 
     // Fetch the text data from MongoDB collection
     const collection = db.collection('fs.files'); // Replace with your collection name

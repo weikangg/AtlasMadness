@@ -1,3 +1,4 @@
+import connectToAuthDB from '../../../database/authConn';
 import connectMongo from '../../../database/conn';
 import Users from '../../../model/Schema';
 import { hash } from 'bcryptjs';

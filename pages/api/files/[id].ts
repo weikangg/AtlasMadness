@@ -1,18 +1,12 @@
 import { MongoClient, Db, GridFSBucket, ObjectId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
-
-const connectToDatabase = async (): Promise<Db> => {
-  const client = new MongoClient(process.env.MONGO_URI!);
-  await client.connect();
-  const db = client.db('Auth');
-  return db;
-};
+import connectToAuthDB from '../../../database/authConn';
 
 export default async function handler(req:any, res:NextApiResponse) {
 
   if (req.method === 'GET') {
     try {
-      const db = await connectToDatabase();
+      const db = await connectToAuthDB();
       const bucket = new GridFSBucket(db);
       const file_id = new ObjectId(req.query.id);
 
