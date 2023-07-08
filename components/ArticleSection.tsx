@@ -11,6 +11,7 @@ type Note = {
   _id: string;
   filename: string;
   length: number;
+  fileAuthor: string;
 };
 
 const useStyles = createStyles((theme) => ({
@@ -75,7 +76,7 @@ export default function ArticleSection() {
     getNotes();
   }, []);
 
-  const handleSearch = (query: string) => {
+  const handleSearch = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const filtered = notes.filter((note) =>
       note.filename.toLowerCase().includes(inputRef.current?.value?.toLowerCase() || '')
     );
