@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import ArticleCard from '../../components/ArticleCard';
+import ArticleSection from '../../components/ArticleSection';
 import { Card, createStyles, Center } from '@mantine/core';
 import { useSession } from 'next-auth/react';
 
@@ -45,7 +46,8 @@ export default function AllNotesPage() {
       {session ? (
         <div className={classes.header}>
           <h1>All Notes</h1>
-          <Card className={classes.card}>
+          <ArticleSection/>
+          {/* <Card className={classes.card}>
             {notes.map((note, index) => (
               <ArticleCard
                 key={index}
@@ -61,7 +63,7 @@ export default function AllNotesPage() {
                 }}
               />
             ))}
-          </Card>
+          </Card> */}
         </div>
       ) : (
         <Center maw={400} h={100} mx="auto">
