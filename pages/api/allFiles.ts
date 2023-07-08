@@ -1,23 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { MongoClient, Db, GridFSBucket } from 'mongodb';
+import connectToAuthDB from '../../database/authConn';
 
-const connectToDatabase = async (): Promise<Db> => {
-  const client = new MongoClient(process.env.MONGO_URI!);
-  try {
-    await client.connect();
-    console.log('Successfully connected to database'); // Added log
-    const db = client.db('Auth');
-    return db;
-  } catch (error) {
-    console.error('Error connecting to database: ', error); // Added error logging
-    throw error;
-  }
-};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     try {
-      const db = await connectToDatabase();
+      const db = await connectToAuthDB();
       const bucket = new GridFSBucket(db);
 
       // Create an array to store the file data

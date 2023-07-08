@@ -5,6 +5,7 @@ import fs from 'fs';
 import { OpenAIApi, Configuration } from 'openai';
 import { convertToHtml } from 'mammoth/mammoth.browser';
 import path from 'path';
+import connectToAuthDB from '../../database/authConn';
 
 const { DocumentProcessorServiceClient } = require('@google-cloud/documentai').v1;
 
@@ -12,18 +13,6 @@ export const config = {
   api: {
     bodyParser: false,
   },
-};
-
-const connectToDatabase = async (): Promise<Db> => {
-  const client = new MongoClient(process.env.MONGO_URI!);
-  try {
-    await client.connect();
-    const db = client.db('Auth');
-    return db;
-  } catch (error) {
-    console.error('Error connecting to database: ', error); // Added error logging
-    throw error;
-  }
 };
 
 const extractPdfContent = async (buffer: Buffer): Promise<string> => {
@@ -152,7 +141,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     try {
-      const db = await connectToDatabase();
+      const db = await connectToAuthDB();
       const bucket = new GridFSBucket(db);
 
       // Assuming only one file is uploaded at a time
@@ -183,6 +172,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             const extension = path.extname(file.filename).slice(1);
             let textContent = '';
+            console.log("extendsion", extension)
 
             if (extension === 'pdf') {
               textContent = await extractPdfContent(buffer);

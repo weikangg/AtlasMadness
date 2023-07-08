@@ -2,9 +2,9 @@ import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import GithubProvider from 'next-auth/providers/github';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import connectMongo from '../../../database/conn';
 import Users from '../../../model/Schema';
 import { compare } from 'bcryptjs';
+import connectMongo from '../../../database/conn';
 
 export const authOptions: NextAuthOptions = {
   providers: [

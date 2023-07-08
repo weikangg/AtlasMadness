@@ -1,12 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { MongoClient, Db, ObjectId, GridFSBucket } from 'mongodb';
-
-const connectToDatabase = async (databaseName: string): Promise<Db> => {
-  const client = new MongoClient(process.env.MONGO_URI!);
-  await client.connect();
-  const db = client.db(databaseName);
-  return db;
-};
+import connectToUserDB from '../../database/userConn';
+import connectToAuthDB from '../../database/authConn';
 
 const getChunkData = (bucket: GridFSBucket, fileId: ObjectId): Promise<any> => {
   return new Promise((resolve, reject) => {
@@ -56,8 +51,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'GET') {
     try {
       const email = req.query.email;
-      const testDb = await connectToDatabase('test');
-      const authDb = await connectToDatabase('Auth');
+      const testDb = await connectToUserDB();
+      const authDb = await connectToAuthDB();
 
       const user = await testDb.collection('users').findOne({ email: email });
       if (user) {
