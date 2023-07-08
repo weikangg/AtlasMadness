@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import ArticleSection from '../../components/ArticleSection';
 import { Card, createStyles, Center } from '@mantine/core';
+import { useSession } from 'next-auth/react';
 
 type Note = {
   _id: string;
@@ -9,7 +10,6 @@ type Note = {
   userName: string;
   title: string;
 };
-
 const useStyles = createStyles((theme) => ({
   card: {
     marginTop: '50px',
@@ -26,29 +26,28 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export default function AllNotesPage() {
+export default function AllBookmarksPage() {
   const [notes, setNotes] = useState<Note[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { classes } = useStyles();
+  const { data: session, status: loading } = useSession();
 
   useEffect(() => {
     const getNotes = async () => {
-      const response = await fetch('/api/allFiles');
-      const data = await response.json();
-      setNotes(Array.isArray(data) ? data : []);
-      setIsLoading(false);
+      if (session?.user?.email) {
+        console.log(session?.user?.email);
+        const response = await fetch(`/api/allBookmarks?email=${session?.user?.email}`);
+        const data = await response.json();
+        setNotes(Array.isArray(data) ? data : []);
+      }
     };
 
     getNotes();
-  }, []);
-
-  if (isLoading) {
-    return <div>Loading...</div>;  // Replace this with a loading spinner or similar if you want.
-  }
+    console.log(notes);
+  }, [session, loading]);
 
   return (
     <div className={classes.header}>
-      <h1>All Notes</h1>
+      <h1>All Bookmarks</h1>
       <ArticleSection notes={notes} />
     </div>
   );

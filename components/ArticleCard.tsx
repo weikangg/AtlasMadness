@@ -1,4 +1,4 @@
-import { IconBookmark, IconHeart, IconShare } from '@tabler/icons-react';
+import { IconBookmark,  IconShare } from '@tabler/icons-react';
 import {
   Card,
   Image,
@@ -11,6 +11,8 @@ import {
   createStyles,
   rem,
 } from '@mantine/core';
+import { useSession } from 'next-auth/react';
+import axios from 'axios';
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -44,6 +46,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface ArticleCardProps {
+  articleId: string;
   image: string;
   link: string;
   title: string;
@@ -56,6 +59,8 @@ interface ArticleCardProps {
 }
 
 export default function ArticleCard({
+  key,
+  articleId,
   className,
   image,
   link,
@@ -66,7 +71,10 @@ export default function ArticleCard({
   ...others
 }: ArticleCardProps & Omit<React.ComponentPropsWithoutRef<'div'>, keyof ArticleCardProps>) {
   const { classes, cx, theme } = useStyles();
+  const { data: session } = useSession();
+  const email = session?.user?.email;
   const linkProps = { href: link, rel: 'noopener noreferrer' };
+
   const handleShare = async () => {
     if (navigator.share) {
       try {
@@ -84,6 +92,18 @@ export default function ArticleCard({
       );
     }
   };
+
+  const handleBookmark = async () => {
+    try {
+      const response = await axios.post('/api/addBookmarks', { email, articleId });
+      // Handle successful bookmarking. Maybe update UI or show a message.
+      console.log(response.data);
+    } catch (error) {
+      // Handle errors. Maybe show a message to the user.
+      console.error('Error adding bookmark:', error);
+    }
+  };
+
   return (
     <Card withBorder radius="md" className={cx(classes.card, className)} {...others}>
       <Card.Section>
@@ -113,10 +133,7 @@ export default function ArticleCard({
         </Center>
 
         <Group spacing={8} mr={0}>
-          <ActionIcon className={classes.action}>
-            <IconHeart size="1rem" color={theme.colors.red[6]} />
-          </ActionIcon>
-          <ActionIcon className={classes.action}>
+          <ActionIcon className={classes.action} onClick={handleBookmark}>
             <IconBookmark size="1rem" color={theme.colors.yellow[7]} />
           </ActionIcon>
           <ActionIcon className={classes.action} onClick={handleShare}>

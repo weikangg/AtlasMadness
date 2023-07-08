@@ -7,13 +7,16 @@ import { useRef } from 'react';
 import { Card, createStyles } from '@mantine/core';
 import SearchBar from './NewSearchBar';
 
-
 type Note = {
   _id: string;
   filename: string;
   length: number;
-  fileAuthor: string;
-  fileTitle: string;
+  userName: string;
+  title: string;
+};
+
+type ArticleSectionProps = {
+  notes: Note[];
 };
 
 const useStyles = createStyles((theme) => ({
@@ -63,40 +66,30 @@ const useStyles = createStyles((theme) => ({
 // Items per page
 const ITEMS_PER_PAGE = 6;
 
-export default function ArticleSection() {
+export default function ArticleSection({ notes }: ArticleSectionProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const { classes } = useStyles();
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
-
+  const [filteredNotes, setFilteredNotes] = useState<Note[]>(notes || []);
+  useEffect(() => {
+    setFilteredNotes(notes);
+  }, [notes]);
   // Add state for current page
   const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    const getNotes = async () => {
-      const response = await fetch('/api/allFiles');
-      const data = await response.json();
-      console.log(data);
-      setNotes(Array.isArray(data) ? data : []);
-      setFilteredNotes(Array.isArray(data) ? data : []);
-    };
-    getNotes();
-  }, []);
-
   const handleSearch = (query: string) => {
     const regex = new RegExp(query, 'i');
-    const filtered = notes.filter((note) =>
-      regex.test(note.fileTitle)
-    );
+    const filtered = notes.filter((note) => regex.test(note.title));
     setFilteredNotes(filtered);
   };
 
   // Adjust the notes you are rendering based on the current page
-  const notesToRender = filteredNotes.slice(
+  const notesToRender = (filteredNotes || []).slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
-
+  if (!filteredNotes) {
+    return <div>Loading...</div>; // Or some other placeholder
+  }
   return (
     <div className={classes.header}>
       <h2>Search through our database of over 10 thousand notes!</h2>
@@ -105,13 +98,14 @@ export default function ArticleSection() {
         {notesToRender.map((note, index) => (
           <ArticleCard
             key={index}
+            articleId={note._id}
             image="https://i.imgur.com/Cij5vdL.png"
             link={`/details/${note._id}`}
-            title={note.fileTitle}
+            title={note.title}
             description={`${note.length} bytes`}
             rating="outstanding"
             author={{
-              name: note.fileAuthor,
+              name: note.userName,
               image:
                 'https://images.unsplash.com/photo-1593229874334-90d965f27c42?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
             }}

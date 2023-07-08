@@ -1,10 +1,12 @@
 import { Schema, model, models } from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 const UserSchema = new Schema(
   {
     name: String,
     email: String,
     password: String,
+    bookmarks: [ObjectId],
   },
   {}
 );

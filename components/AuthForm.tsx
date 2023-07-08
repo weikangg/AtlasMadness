@@ -50,7 +50,7 @@ export function AuthenticationForm(props: PaperProps & { closeModal: () => void 
       body: JSON.stringify(values),
     };
 
-    const response = await fetch('http://localhost:3000/api/auth/signup', options)
+    const response = await fetch('/api/auth/signup', options)
       .then((res) => res.json())
       .then(() => {
         toggle();
