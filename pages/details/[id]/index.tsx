@@ -6,12 +6,14 @@ import {
   DownloadOriginalButton,
   DownloadSummaryButton,
 } from '../../../components/details/DownloadButton';
+import { Accordion } from '@mantine/core';
 
 interface Note {
   title: string;
   description: string;
   summary: string;
   fileId: ObjectId;
+  qna: any[];
 }
 
 interface PageProps {
@@ -81,31 +83,20 @@ export default function Page({ note }: PageProps) {
           <h4 id="summary">Summary</h4>
           <p>{note.summary}</p>
           <h4 id="notes">Quiz Cards</h4>
-          <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Recusandae quod adipisci
-            molestias, fugit nobis mollitia cumque perferendis veniam aliquid? Blanditiis illo
-            eveniet suscipit minima ea quam doloribus officiis. Voluptas, consequatur.
-          </p>
-          <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Recusandae quod adipisci
-            molestias, fugit nobis mollitia cumque perferendis veniam aliquid? Blanditiis illo
-            eveniet suscipit minima ea quam doloribus officiis. Voluptas, consequatur.
-          </p>
-          <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Recusandae quod adipisci
-            molestias, fugit nobis mollitia cumque perferendis veniam aliquid? Blanditiis illo
-            eveniet suscipit minima ea quam doloribus officiis. Voluptas, consequatur.
-          </p>
-          <p>
-            Lorem ipsum, dolor sit ametß consectetur adipisicing elit. Recusandae quod adipisci
-            molestias, fugit nobis mollitia cumque perferendis veniam aliquid? Blanditiis illo
-            eveniet suscipit minima ea quam doloribus officiis. Voluptas, consequatur.
-          </p>
-          <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Recusandae quod adipisci
-            molestias, fugit nobis mollitia cumque perferendis veniam aliquid? Blanditiis illo
-            eveniet suscipit minima ea quam doloribus officiis. Voluptas, consequatur.
-          </p>
+          {note.qna.map((x) => {
+            const question = x.question;
+            const answer = x.answer;
+
+            return (
+              <Accordion>
+                <Accordion.Item value="question">
+                  <Accordion.Control>{question}</Accordion.Control>
+                  <Accordion.Panel>{answer}</Accordion.Panel>
+                </Accordion.Item>
+              </Accordion>
+            );
+          })}
+          <br />
           <div style={{ display: 'flex' }}>
             <DownloadOriginalButton fileId={note.fileId} />
             <div style={{ marginLeft: '20px' }}>
