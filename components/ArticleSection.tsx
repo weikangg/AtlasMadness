@@ -4,7 +4,7 @@ import SearchBar from '../components/SearchBar';
 import { useEffect, useState } from 'react';
 import { rem } from '@mantine/core';
 import { useRef } from 'react';
-
+import { Pagination } from '@mantine/core';
 import { Card, createStyles } from '@mantine/core';
 
 type Note = {
@@ -139,6 +139,8 @@ export default function ArticleSection() {
           />
         ))}
       </Card>
+      <br />
+      <Pagination total={10} color="gray" />
     </div>
   );
 }
