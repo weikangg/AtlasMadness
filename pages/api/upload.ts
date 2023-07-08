@@ -6,6 +6,13 @@ import { OpenAIApi, Configuration } from 'openai';
 import { convertToHtml } from 'mammoth/mammoth.browser';
 import path from 'path';
 import connectToAuthDB from '../../database/authConn';
+import { SpeechClient } from '@google-cloud/speech';
+import { Storage } from '@google-cloud/storage';
+// @ts-ignore
+import ffmpeg from 'fluent-ffmpeg';
+import ffmpegPath from 'ffmpeg-static';
+
+ffmpeg.setFfmpegPath(ffmpegPath);
 
 const { DocumentProcessorServiceClient } = require('@google-cloud/documentai').v1;
 
@@ -58,6 +65,104 @@ const extractDocxContent = async (buffer: Buffer): Promise<string> => {
     throw new Error('Error extracting content from .docx file');
   }
   return result.value;
+};
+
+const CHUNK_SIZE = 3 * 1024 * 1024; // 10 MB
+
+const extractVideoContent = async (buffer: Buffer, fileName: String, filepath: String): Promise<string> => {
+  console.log(filepath)
+  const outputBuffer = await new Promise((resolve, reject) => {
+    ffmpeg()
+    .input(filepath)
+    .audioChannels(1)
+    .noVideo()
+    .outputFormat('flac')
+    .on('error', (err:any) => {
+      console.log(`An error occurred: ${err.message}`);
+      reject(err);
+    })
+    .on('end', (stdout:any, stderr:any) => {
+      console.log('Conversion completed successfully');
+    })
+    .outputOptions('-map 0:a:0')
+    .toFormat('flac')
+    .pipe()
+    .on('data', (data: any) => {
+      resolve(data);
+    });
+  });
+
+  console.log('Converted video to audio with flac type');
+
+  // Creates a new SpeechClient with authentication
+  let client;
+
+  if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+    client = new SpeechClient({
+      credentials: JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS),
+    });
+  } else {
+    throw new Error('GOOGLE_APPLICATION_CREDENTIALS environment variable is not set');
+  }
+  console.log("Authenticated")
+
+  let storageClient;
+
+  if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+    storageClient = new Storage({
+      credentials: JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS),
+    });
+  } else {
+    throw new Error('GOOGLE_APPLICATION_CREDENTIALS environment variable is not set');
+  }
+  console.log('Storage authenticated');
+
+  // Configuration object for the speech recognition request
+  const requestConfig: any = {
+    enableAutomaticPunctuation: true,
+    encoding: "FLAC",
+    languageCode: "en-US",
+    model: "default",
+    sampleRateHertz: 48000
+  };
+  // Uploads the audio file to Google Cloud Storage
+  const bucketName = 'audio-files-hackathon';
+  const bucket = storageClient.bucket(bucketName);
+  const file = bucket.file(fileName.toString());
+  if (!Buffer.isBuffer(outputBuffer)) {
+    throw new Error('Output buffer is not a buffer');
+  }
+  await file.save(outputBuffer);
+  // Creates a new recognition audio object with the GCS URI
+  const audio: any = {
+    uri: `gs://${bucketName}/${fileName}`,
+  };
+
+  const request: any = {
+    audio,
+    config: requestConfig
+  }
+
+  try {
+    console.log('Starting speech recognition');
+    // Performs speech recognition on the audio file
+    const [operation] = await client.longRunningRecognize(request);
+    const [response] = await operation.promise();
+    console.log('Speech recognition completed');
+    console.log("response", response)
+    // Extracts the transcription from the response
+    const transcription = response.results
+    ? response.results
+        .flatMap((result) => result.alternatives)
+        .map((alternative: any) => alternative.transcript)
+        .join('\n')
+    : '';
+
+    return transcription;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 const configuration = new Configuration({
@@ -143,22 +248,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const db = await connectToAuthDB();
       const bucket = new GridFSBucket(db);
-
       // Assuming only one file is uploaded at a time
       const file = data.files.file[0]; // access the first file in the array
       const readStream = fs.createReadStream(file.filepath); // use `filepath` instead of `path`
       const uploadStream = bucket.openUploadStream(file.originalFilename); // use `originalFilename` instead of `name`
-
       // Attach the email & name field to the file metadata
       uploadStream.options.metadata = {
         title: data.fields.title || '',
         description: data.fields.description || '',
         userEmail: data.fields.userEmail || '',
         userName: data.fields.userName || '',
+        filepath: file.filepath
       };
 
       readStream.pipe(uploadStream);
-
+      console.log("test4")
+      
       uploadStream.on('finish', async (file: any) => {
         try {
           const fileContent: any = [];
@@ -179,9 +284,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               isDocx = false;
             } else if (extension === 'docx') {
               textContent = await extractDocxContent(buffer);
+            } else if (extension === 'mp4'){
+              textContent = await extractVideoContent(buffer, file.filename, file.metadata.filepath);
+              isDocx = false;
             } else {
               throw new Error('Unsupported file type');
             }
+            console.log("textcontent:", textContent)
+            res.status(200).json({ message: 'File uploaded and summarized successfully' });
             const summary = await summarizeContent(textContent, isDocx);
             const qna = await generateQnA(summary);
             // Split the string into an array
