@@ -305,7 +305,7 @@ export function HeaderMegaMenu() {
         </ScrollArea>
       </Drawer>
 
-      <Modal opened={showModal} onClose={close || closeModal}>
+      <Modal opened={showModal} onClose={closeModal}>
         <AuthenticationForm closeModal={closeModal} />
       </Modal>
     </Box>

@@ -8,8 +8,8 @@ type Note = {
   _id: string;
   filename: string;
   length: number;
-  fileAuthor: string;
-  fileTitle: string;
+  userName: string;
+  title: string;
 };
 
 const useStyles = createStyles((theme) => ({
