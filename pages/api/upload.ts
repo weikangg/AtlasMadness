@@ -139,7 +139,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // Attach the email field to the file metadata
       uploadStream.options.metadata = {
-        email: data.fields.email || '', // Provide a default value if email is undefined
+        title: data.fields.title || '',
+        description: data.fields.description || '',
       };
 
       readStream.pipe(uploadStream);
@@ -170,7 +171,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             // Save the summary to MongoDB, linked to the ID of the original document
             const summariesCollection = db.collection('summaries'); // replace 'summaries' with your collection's name
-            await summariesCollection.insertOne({ fileId: file._id, summary });
+            await summariesCollection.insertOne({ 
+              fileId: file._id, 
+              title: data.fields.title || '',
+              description: data.fields.description || '',
+              summary 
+            });
 
             res.status(200).json({ message: 'File uploaded and summarized successfully', summary });
             return;

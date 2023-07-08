@@ -27,38 +27,20 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function DropzoneNotesButton() {
+export function DropzoneNotesButton({
+  setUploadedFile,
+  setFileName,
+}: {
+  setUploadedFile: Function;
+  setFileName: Function;
+}) {
   const { classes, theme } = useStyles();
   const openRef = useRef<() => void>(null);
   const { data: session } = useSession();
 
   const handleDrop = async (acceptedFiles: any) => {
-    const formData = new FormData();
-
-    acceptedFiles.forEach((file: any) => {
-      formData.append('file', file);
-      formData.append('email', session?.user?.email || '');
-    });
-
-    console.log(formData);
-    const response = await fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
-    });
-
-    if (!response.ok) {
-      // Try to decode the response as text if it's not OK
-      const text = await response.text();
-      throw new Error(`Request failed: ${text}`);
-    }
-
-    const data = await response.json();
-    console.log(data);
-    // New: Display the summary
-    if (data.summary) {
-      alert(`Summary of the uploaded document: ${data.summary}`);
-    }
-  
+    setUploadedFile(acceptedFiles[0]);
+    setFileName(acceptedFiles[0].name);
   };
 
   return (
@@ -98,8 +80,8 @@ export function DropzoneNotesButton() {
             <Dropzone.Idle>Upload Notes</Dropzone.Idle>
           </Text>
           <Text ta="center" fz="sm" mt="xs" c="dimmed">
-            Drag&apos;n&apos;drop files here to upload. We can accept only <i>.pdf</i> or <i>.docx</i> files that
-            are less than 30mb in size.
+            Drag&apos;n&apos;drop files here to upload. We can accept only <i>.pdf</i> or{' '}
+            <i>.docx</i> files that are less than 30mb in size.
           </Text>
         </div>
       </Dropzone>

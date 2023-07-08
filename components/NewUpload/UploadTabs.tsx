@@ -64,7 +64,7 @@ function StyledTabs(props: TabsProps) {
   );
 }
 
-export default function UploadTabs() {
+export default function UploadTabs({ setUploadedFile, setFileName }: { setUploadedFile: Function, setFileName: Function }) {
   const [active, setActive] = useState<TabsValue>('notes');
   const { data: session } = useSession();
 
@@ -88,7 +88,7 @@ export default function UploadTabs() {
             </Tabs.List>
           </StyledTabs>
 
-          {active === 'notes' && <DropzoneNotesButton />}
+          {active === 'notes' && <DropzoneNotesButton setUploadedFile={setUploadedFile} setFileName={setFileName} />}
 
           {active === 'video' && <DropzoneVideoButton />}
         </div>
