@@ -9,6 +9,13 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
     const query = inputRef.current?.value || '';
     onSearch(query);
   };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <TextInput
       icon={<IconSearch size="1.1rem" stroke={1.5} />}
@@ -27,6 +34,7 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
       placeholder="Search file"
       rightSectionWidth={42}
       ref={inputRef}
+      onKeyDown={handleKeyDown}
     />
   );
 }
