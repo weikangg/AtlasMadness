@@ -67,7 +67,23 @@ export default function ArticleCard({
 }: ArticleCardProps & Omit<React.ComponentPropsWithoutRef<'div'>, keyof ArticleCardProps>) {
   const { classes, cx, theme } = useStyles();
   const linkProps = { href: link, rel: 'noopener noreferrer' };
-
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Check out this article',
+          url: link,
+        });
+      } catch (err) {
+        console.error('Error sharing:', err);
+      }
+    } else {
+      // Fallback for unsupported browsers
+      alert(
+        'Your browser does not support the share API. Please use Google Chrome or Edge instead, thank you!'
+      );
+    }
+  };
   return (
     <Card withBorder radius="md" className={cx(classes.card, className)} {...others}>
       <Card.Section>
@@ -103,7 +119,7 @@ export default function ArticleCard({
           <ActionIcon className={classes.action}>
             <IconBookmark size="1rem" color={theme.colors.yellow[7]} />
           </ActionIcon>
-          <ActionIcon className={classes.action}>
+          <ActionIcon className={classes.action} onClick={handleShare}>
             <IconShare size="1rem" />
           </ActionIcon>
         </Group>
