@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { MongoClient, Db } from 'mongodb';
-import connectToAuthDB from '../../database/authConn';
+import connectToUserDB from '../../database/userConn';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -16,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           return res.status(400).json({ error: 'Missing email or articleId' });
         }
 
-        const db = await connectToAuthDB();
+        const db = await connectToUserDB();
         const user = await db
           .collection('users')
           .findOneAndUpdate(
@@ -36,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           return res.status(400).json({ error: 'Missing email or articleId' });
         }
 
-        const db = await connectToDatabase();
+        const db = await connectToUserDB();
         const user = await db.collection('users').findOneAndUpdate(
           { email },
           { $pull: { bookmarks: articleId } }, // Use $pull to remove item from array
@@ -54,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(400).json({ error: 'Missing email or articleId' });
           }
   
-          const db = await connectToDatabase();
+          const db = await connectToUserDB();
           const user = await db.collection('users').findOne({ email });
           if (!user) {
             return res.status(404).json({ error: 'User not found' });
