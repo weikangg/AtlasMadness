@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { MongoClient, Db, GridFSBucket } from 'mongodb';
-import { getSession } from 'next-auth/react';
 
 const connectToDatabase = async (): Promise<Db> => {
   const client = new MongoClient(process.env.MONGO_URI!);
@@ -18,20 +17,14 @@ const connectToDatabase = async (): Promise<Db> => {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     try {
-      const session = await getSession({ req });
-      if (!session) {
-        res.status(401).json({ error: 'Unauthorized' });
-        return;
-      }
       const db = await connectToDatabase();
       const bucket = new GridFSBucket(db);
-      const email = session?.user?.email;
 
       // Create an array to store the file data
       let filesData: any = [];
 
       // Create a stream and use it to read filenames from GridFS
-      const stream = bucket.find({ 'metadata.email': email }).stream();
+      const stream = bucket.find({}).stream();
 
       stream.on('data', (doc) => {
         // Push each file data to the array
