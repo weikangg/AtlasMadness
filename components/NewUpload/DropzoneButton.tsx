@@ -93,34 +93,20 @@ export function DropzoneNotesButton({
   );
 }
 
-export function DropzoneVideoButton() {
+export function DropzoneVideoButton({
+  setUploadedFile,
+  setFileName,
+}: {
+  setUploadedFile: Function;
+  setFileName: Function;
+}) {
   const { classes, theme } = useStyles();
   const openRef = useRef<() => void>(null);
   const { data: session } = useSession();
 
   const handleDrop = async (acceptedFiles: any) => {
-    const formData = new FormData();
-
-    acceptedFiles.forEach((file: any) => {
-      formData.append('file', file);
-      formData.append('email', session?.user?.email || '');
-    });
-
-    console.log(formData);
-    const response = await fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
-    });
-
-    if (!response.ok) {
-      // Try to decode the response as text if it's not OK
-      const text = await response.text();
-      throw new Error(`Request failed: ${text}`);
-    }
-
-    // Try to decode the response as JSON if it's OK
-    const data = await response.json();
-    console.log(data);
+    setUploadedFile(acceptedFiles[0]);
+    setFileName(acceptedFiles[0].name);
   };
 
   return (

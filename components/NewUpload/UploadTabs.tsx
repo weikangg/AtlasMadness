@@ -90,7 +90,7 @@ export default function UploadTabs({ setUploadedFile, setFileName }: { setUpload
 
           {active === 'notes' && <DropzoneNotesButton setUploadedFile={setUploadedFile} setFileName={setFileName} />}
 
-          {active === 'video' && <DropzoneVideoButton />}
+          {active === 'video' && <DropzoneVideoButton setUploadedFile={setUploadedFile} setFileName={setFileName}/>}
         </div>
       ) : (
         <Center maw={400} h={100} mx="auto">
