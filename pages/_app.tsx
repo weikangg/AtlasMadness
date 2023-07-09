@@ -17,7 +17,7 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
     setCookie('mantine-color-scheme', nextColorScheme, { maxAge: 60 * 60 * 24 * 30 });
   };
 
-    return (
+  return (
     <>
       <Head>
         <title>Atlas Madness</title>
