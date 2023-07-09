@@ -13,8 +13,11 @@ import {
   Anchor,
   Stack,
 } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { IconAlertCircle } from '@tabler/icons-react';
 import { GithubButton, GoogleButton } from './SocialButtons';
 import { signIn } from 'next-auth/react';
+
 export function AuthenticationForm(props: PaperProps & { closeModal: () => void }) {
   const [type, toggle] = useToggle(['login', 'register']);
 
@@ -34,13 +37,27 @@ export function AuthenticationForm(props: PaperProps & { closeModal: () => void 
   });
 
   const handleSubmitLogin = async (values: any) => {
-    const status = await signIn('credentials', {
-      redirect: false,
-      email: values.email,
-      password: values.password,
-      callbackUrl: '/',
-    });
-    props.closeModal();
+    try {
+      const status = await signIn('credentials', {
+        redirect: false,
+        email: values.email,
+        password: values.password,
+        callbackUrl: '/',
+      });
+
+      if (status?.error) {
+        throw new Error('Authentication failed');
+      }
+
+      props.closeModal();
+    } catch (error) {
+      notifications.show({
+        title: 'Authentication failed',
+        message: 'You have entered an invalid email or password',
+        icon: <IconAlertCircle />,
+        color: 'red',
+      });
+    }
   };
 
   const handleSubmitRegister = async (values: any) => {
