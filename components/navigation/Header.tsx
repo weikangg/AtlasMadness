@@ -19,9 +19,7 @@ import {
   rem,
   Modal,
   Avatar,
-  Container,
 } from '@mantine/core';
-import { MantineLogo } from '@mantine/ds';
 import { useDisclosure } from '@mantine/hooks';
 import {
   IconNotification,
@@ -31,13 +29,17 @@ import {
   IconFingerprint,
   IconCoin,
   IconChevronDown,
+  IconHome2,
+  IconBookmarks,
+  IconNotes,
+  IconBookUpload,
 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { ColorSchemeToggle } from '../ColorSchemeToggle/ColorSchemeToggle';
 import { useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { AuthenticationForm } from '../AuthForm';
-import  SummAIzeLogo  from '../../images/summAIze.png';
+import SummAIzeLogo from '../../images/summAIze.png';
 import { StaticImageData } from 'next/image';
 
 const useStyles = createStyles((theme) => ({
@@ -98,10 +100,10 @@ const useStyles = createStyles((theme) => ({
       display: 'none',
     },
   },
-  header : {
-    height:'80px',
-    maxHeight:'100px'
-  }
+  header: {
+    height: '80px',
+    maxHeight: '100px',
+  },
 }));
 
 const mockdata = [
@@ -173,12 +175,13 @@ export function HeaderMegaMenu() {
   ));
 
   return (
-    <Box pb="md" >
+    <Box pb="md">
       <Header height={60} px="md" className={classes.header}>
-        <Group position="apart" sx={{ height: '100%', marginBottom:'80px'}}>
-          <img src={logoSrc} alt="SummAIze Logo" style={{ width: '130px', height: 'auto'}} />
+        <Group position="apart" sx={{ height: '100%', marginBottom: '80px' }}>
+          <img src={logoSrc} alt="SummAIze Logo" style={{ width: '130px', height: 'auto' }} />
           <Group sx={{ height: '100%' }} spacing={0} className={classes.hiddenMobile}>
             <Link href="/" className={classes.link}>
+              <IconHome2 size={20} />
               Home
             </Link>
             {/* <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
@@ -227,12 +230,15 @@ export function HeaderMegaMenu() {
               </HoverCard.Dropdown>
             </HoverCard> */}
             <Link href="/bookmarks" className={classes.link}>
+              <IconBookmarks size={20} />
               Bookmarks
             </Link>
             <Link href="/all-notes" className={classes.link}>
+              <IconNotes size={20} />
               All Notes
             </Link>
             <Link href="/new-upload" className={classes.link}>
+              <IconBookUpload size={20} />
               Upload New
             </Link>
             <ColorSchemeToggle />
