@@ -7,7 +7,7 @@ import { StaticImageData } from 'next/image';
 const useStyles = createStyles((theme) => ({
   footer: {
     marginTop: rem(60),
-    paddingTop: `calc(${theme.spacing.xl} * 2)`,
+    paddingTop: `calc(${theme.spacing.xl} * 1.5)`,
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
     borderTop: `${rem(1)} solid ${
       theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]
