@@ -11,7 +11,7 @@ export default async function connectToUserDB(): Promise<Db> {
   try {
     client = new MongoClient(process.env.MONGO_URI!);
     await client.connect();
-    db = client.db('Test');
+    db = client.db('test');
     return db;
   } catch (error) {
     console.error(error);
