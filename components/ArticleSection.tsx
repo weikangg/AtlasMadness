@@ -67,7 +67,11 @@ const useStyles = createStyles((theme) => ({
 // Items per page
 const ITEMS_PER_PAGE = 6;
 
-export default function ArticleSection({ notes, removeNote }: ArticleSectionProps) {
+export default function ArticleSection({
+  notes,
+  removeNote,
+  emptyMessage,
+}: ArticleSectionProps & { emptyMessage?: string }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const { classes } = useStyles();
   const [filteredNotes, setFilteredNotes] = useState<Note[]>(notes || []);
@@ -94,7 +98,7 @@ export default function ArticleSection({ notes, removeNote }: ArticleSectionProp
   if (notes.length === 0) {
     return (
       <div>
-        <h4>No bookmarked notes for now. Bookmark something?</h4>
+        <h4>{emptyMessage}</h4>
       </div>
     );
   }

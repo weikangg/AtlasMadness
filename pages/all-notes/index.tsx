@@ -43,13 +43,13 @@ export default function AllNotesPage() {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;  // Replace this with a loading spinner or similar if you want.
+    return <div>Loading...</div>; // Replace this with a loading spinner or similar if you want.
   }
 
   return (
     <div className={classes.header}>
       <h1>All Notes</h1>
-      <ArticleSection notes={notes} />
+      <ArticleSection notes={notes} emptyMessage="No notes found. Upload a new note now?" />
     </div>
   );
 }
