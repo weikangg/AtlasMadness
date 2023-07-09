@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { MongoClient, Db, GridFSBucket } from 'mongodb';
+import { PassThrough } from 'stream';
 import { IncomingForm } from 'formidable';
 import fs from 'fs';
 import { OpenAIApi, Configuration } from 'openai';
@@ -67,33 +68,8 @@ const extractDocxContent = async (buffer: Buffer): Promise<string> => {
   return result.value;
 };
 
-const CHUNK_SIZE = 3 * 1024 * 1024; // 10 MB
-
 const extractVideoContent = async (buffer: Buffer, fileName: String, filepath: String): Promise<string> => {
   console.log(filepath)
-  const outputBuffer = await new Promise((resolve, reject) => {
-    ffmpeg()
-    .input(filepath)
-    .audioChannels(1)
-    .noVideo()
-    .outputFormat('flac')
-    .on('error', (err:any) => {
-      console.log(`An error occurred: ${err.message}`);
-      reject(err);
-    })
-    .on('end', (stdout:any, stderr:any) => {
-      console.log('Conversion completed successfully');
-    })
-    .outputOptions('-map 0:a:0')
-    .toFormat('flac')
-    .pipe()
-    .on('data', (data: any) => {
-      resolve(data);
-    });
-  });
-
-  console.log('Converted video to audio with flac type');
-
   // Creates a new SpeechClient with authentication
   let client;
 
@@ -120,19 +96,16 @@ const extractVideoContent = async (buffer: Buffer, fileName: String, filepath: S
   // Configuration object for the speech recognition request
   const requestConfig: any = {
     enableAutomaticPunctuation: true,
-    encoding: "FLAC",
+    encoding: "LINEAR16",
     languageCode: "en-US",
-    model: "default",
-    sampleRateHertz: 48000
+    model: "video",
+    sampleRateHertz: 16000
   };
   // Uploads the audio file to Google Cloud Storage
   const bucketName = 'audio-files-hackathon';
   const bucket = storageClient.bucket(bucketName);
   const file = bucket.file(fileName.toString());
-  if (!Buffer.isBuffer(outputBuffer)) {
-    throw new Error('Output buffer is not a buffer');
-  }
-  await file.save(outputBuffer);
+  await file.save(buffer);
   // Creates a new recognition audio object with the GCS URI
   const audio: any = {
     uri: `gs://${bucketName}/${fileName}`,
@@ -146,15 +119,17 @@ const extractVideoContent = async (buffer: Buffer, fileName: String, filepath: S
   try {
     console.log('Starting speech recognition');
     // Performs speech recognition on the audio file
-    const [operation] = await client.longRunningRecognize(request);
-    const [response] = await operation.promise();
+    const [response] = await client.recognize(request);
+    // const [operation] = await client.longRunningRecognize(request);
+    // const [response] = await operation.promise();
     console.log('Speech recognition completed');
     console.log("response", response)
     // Extracts the transcription from the response
     const transcription = response.results
     ? response.results
-        .flatMap((result) => result.alternatives)
-        .map((alternative: any) => alternative.transcript)
+        .map((result: any) =>{
+          console.log("result alternatives: ", result.alternatives)
+          return result.alternatives[0].transcript})
         .join('\n')
     : '';
 
@@ -163,7 +138,7 @@ const extractVideoContent = async (buffer: Buffer, fileName: String, filepath: S
     console.error(error);
     throw error;
   }
-};
+}
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -262,7 +237,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       };
 
       readStream.pipe(uploadStream);
-      console.log("test4")
       
       uploadStream.on('finish', async (file: any) => {
         try {
@@ -277,7 +251,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             const extension = path.extname(file.filename).slice(1);
             let textContent = '';
-            console.log("extendsion", extension)
+            console.log("extension", extension)
 
             if (extension === 'pdf') {
               textContent = await extractPdfContent(buffer);
@@ -292,6 +266,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
             console.log("textcontent:", textContent)
             res.status(200).json({ message: 'File uploaded and summarized successfully' });
+            return
             const summary = await summarizeContent(textContent, isDocx);
             const qna = await generateQnA(summary);
             // Split the string into an array

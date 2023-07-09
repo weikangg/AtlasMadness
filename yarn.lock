@@ -5682,6 +5682,11 @@
   "resolved" "https://registry.npmjs.org/embla-carousel/-/embla-carousel-7.0.3.tgz"
   "version" "7.0.3"
 
+"emitter-component@^1.1.1":
+  "integrity" "sha512-G+mpdiAySMuB7kesVRLuyvYRqDmshB7ReKEVuyBPkzQlmiDiLrt7hHHIy4Aff552bgknVN7B2/d3lzhGO5dvpQ=="
+  "resolved" "https://registry.npmjs.org/emitter-component/-/emitter-component-1.1.1.tgz"
+  "version" "1.1.1"
+
 "emittery@^0.8.1":
   "integrity" "sha512-uDfvUjVrfGJJhymx/kz6prltenw1u7WrCg1oa94zYY8xxVpLLUu045LAT0dhDZdXG58/EpPL/5kA180fQ/qudg=="
   "resolved" "https://registry.npmjs.org/emittery/-/emittery-0.8.1.tgz"
@@ -12049,6 +12054,13 @@
   "integrity" "sha512-AiisoFqQ0vbGcZgQPY1cdP2I76glaVA/RauYR4G4thNFgkTqr90yXTo4LYX60Jl+sIlPNHHdGSwo01AvbKUSVQ=="
   "resolved" "https://registry.npmjs.org/stream-shift/-/stream-shift-1.0.1.tgz"
   "version" "1.0.1"
+
+"stream@^0.0.2":
+  "integrity" "sha512-gCq3NDI2P35B2n6t76YJuOp7d6cN/C7Rt0577l91wllh0sY9ZBuw9KaSGqH/b0hzn3CWWJbpbW0W0WvQ1H/Q7g=="
+  "resolved" "https://registry.npmjs.org/stream/-/stream-0.0.2.tgz"
+  "version" "0.0.2"
+  dependencies:
+    "emitter-component" "^1.1.1"
 
 "string_decoder@^1.0.0":
   "integrity" "sha512-hkRX8U1WjJFd8LsDJ2yQ/wWWxaopEsABU1XfkM8A+j0+85JAGppt16cr1Whg6KIbb4okU6Mql6BOj+uup/wKeA=="
