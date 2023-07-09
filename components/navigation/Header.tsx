@@ -100,10 +100,10 @@ const useStyles = createStyles((theme) => ({
       display: 'none',
     },
   },
-  header: {
-    height: '80px',
-    maxHeight: '100px',
-  },
+  header : {
+    height:'70px',
+    maxHeight:'100px'
+  }
 }));
 
 const mockdata = [
