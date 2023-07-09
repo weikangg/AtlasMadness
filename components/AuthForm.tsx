@@ -17,10 +17,12 @@ import { notifications } from '@mantine/notifications';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { GithubButton, GoogleButton } from './SocialButtons';
 import { signIn } from 'next-auth/react';
+import { useModalContext } from '../contexts/ModalContext'; // adjust the path accordingly
 
-export function AuthenticationForm(props: PaperProps & { closeModal: () => void }) {
+export function AuthenticationForm(props: PaperProps) {
   const [type, toggle] = useToggle(['login', 'register']);
-
+  const { closeModal } = useModalContext();
+  
   const form = useForm({
     initialValues: {
       email: '',
@@ -44,12 +46,11 @@ export function AuthenticationForm(props: PaperProps & { closeModal: () => void 
         password: values.password,
         callbackUrl: '/',
       });
-
+      closeModal();
       if (status?.error) {
         throw new Error('Authentication failed');
       }
 
-      props.closeModal();
     } catch (error) {
       notifications.show({
         title: 'Authentication failed',

@@ -17,6 +17,7 @@ type Note = {
 
 type ArticleSectionProps = {
   notes: Note[];
+  removeNote?: (noteId: string) => void;
 };
 
 const useStyles = createStyles((theme) => ({
@@ -66,7 +67,7 @@ const useStyles = createStyles((theme) => ({
 // Items per page
 const ITEMS_PER_PAGE = 6;
 
-export default function ArticleSection({ notes }: ArticleSectionProps) {
+export default function ArticleSection({ notes, removeNote }: ArticleSectionProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const { classes } = useStyles();
   const [filteredNotes, setFilteredNotes] = useState<Note[]>(notes || []);
@@ -90,6 +91,13 @@ export default function ArticleSection({ notes }: ArticleSectionProps) {
   if (!filteredNotes) {
     return <div>Loading...</div>; // Or some other placeholder
   }
+  if (notes.length === 0) {
+    return (
+      <div>
+        <h4>No bookmarked notes for now. Bookmark something?</h4>
+      </div>
+    );
+  }
   return (
     <div className={classes.header}>
       <h2>Search through our database of over 10 thousand notes!</h2>
@@ -103,6 +111,7 @@ export default function ArticleSection({ notes }: ArticleSectionProps) {
             link={`/details/${note._id}`}
             title={note.title}
             description={`${note.length} bytes`}
+            removeNote={removeNote}
             rating="outstanding"
             author={{
               name: note.userName,

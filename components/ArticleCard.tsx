@@ -14,6 +14,7 @@ import {
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { useModalContext } from '../contexts/ModalContext';
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -52,6 +53,7 @@ interface ArticleCardProps {
   link: string;
   title: string;
   description: string;
+  removeNote?: (noteId: string) => void;
   rating: string;
   author: {
     name: string;
@@ -67,6 +69,7 @@ export default function ArticleCard({
   link,
   title,
   description,
+  removeNote,
   author,
   rating,
   ...others
@@ -76,6 +79,8 @@ export default function ArticleCard({
   const email = session?.user?.email;
   const linkProps = { href: link, rel: 'noopener noreferrer' };
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const { openModal } = useModalContext(); // <-- use the hook to access openModal
+
   // Fetch bookmark status when component mounts
   useEffect(() => {
     const fetchBookmarkStatus = async () => {
@@ -111,11 +116,17 @@ export default function ArticleCard({
   };
 
   const handleBookmark = async () => {
+    if (!session) {
+      // If user is not logged in, open the modal and do not proceed further
+      openModal();
+      return;
+    }
     try {
       let response;
       if (isBookmarked) {
         // If currently bookmarked, send DELETE request to remove bookmark
         response = await axios.delete('/api/manageBookmarks', { data: { email, articleId } });
+        removeNote && removeNote(articleId); // remove the note from the UI after it's removed from the database
       } else {
         // If not bookmarked, send POST request to add bookmark
         response = await axios.post('/api/manageBookmarks', { email, articleId });

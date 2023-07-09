@@ -1,14 +1,11 @@
 import {
   createStyles,
   Header,
-  HoverCard,
   Group,
   Button,
   UnstyledButton,
   Text,
-  SimpleGrid,
   ThemeIcon,
-  Anchor,
   Divider,
   Center,
   Box,
@@ -41,6 +38,7 @@ import { useSession, signOut } from 'next-auth/react';
 import { AuthenticationForm } from '../AuthForm';
 import SummAIzeLogo from '../../images/summAIze.png';
 import { StaticImageData } from 'next/image';
+import { useModalContext } from '../../contexts/ModalContext'; // adjust the path accordingly
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -146,16 +144,9 @@ export function HeaderMegaMenu() {
   const { classes, theme } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
   const { data: session } = useSession();
-  // Define a state variable to track the modal visibility
-  const [showModal, setShowModal] = useState(false);
-  // Callback function to close the modal
-  const closeModal = () => {
-    setShowModal(false);
-  };
-  const openModal = () => {
-    setShowModal(true);
-  };
 
+  // Get the context state and methods
+  const { modalOpen, openModal, closeModal } = useModalContext();
   const links = mockdata.map((item) => (
     <UnstyledButton className={classes.subLink} key={item.title}>
       <Group noWrap align="flex-start">
@@ -260,6 +251,11 @@ export function HeaderMegaMenu() {
                 Sign In
               </Button>
             )}
+            {modalOpen && (
+              <Modal onClose={closeModal}  opened={modalOpen}>
+                <AuthenticationForm />
+              </Modal>
+            )}
           </Group>
 
           <Burger opened={drawerOpened} onClick={toggleDrawer} className={classes.hiddenDesktop} />
@@ -317,9 +313,9 @@ export function HeaderMegaMenu() {
         </ScrollArea>
       </Drawer>
 
-      <Modal opened={showModal} onClose={closeModal}>
-        <AuthenticationForm closeModal={closeModal} />
-      </Modal>
+      {/* <Modal opened={showModal} onClose={closeModal}>
+        <AuthenticationForm  />
+      </Modal> */}
     </Box>
   );
 }

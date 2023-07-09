@@ -30,7 +30,9 @@ export default function AllBookmarksPage() {
   const [notes, setNotes] = useState<Note[]>([]);
   const { classes } = useStyles();
   const { data: session, status: loading } = useSession();
-
+  const removeNote = (noteId: string) => {
+    setNotes(notes.filter(note => note._id !== noteId));
+  };
   useEffect(() => {
     const getNotes = async () => {
       if (session?.user?.email) {
@@ -48,7 +50,7 @@ export default function AllBookmarksPage() {
   return (
     <div className={classes.header}>
       <h1>All Bookmarks</h1>
-      <ArticleSection notes={notes} />
+      <ArticleSection notes={notes} removeNote={removeNote}/>
     </div>
   );
 }
