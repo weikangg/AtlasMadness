@@ -9,7 +9,7 @@ import connectToAuthDB from '../../database/authConn';
 import { SpeechClient } from '@google-cloud/speech';
 import { Storage } from '@google-cloud/storage';
 // @ts-ignore
-import FFmpeg from '@ffmpeg.wasm/main'
+import FFmpeg from '@ffmpeg.wasm/main';
 
 const { DocumentProcessorServiceClient } = require('@google-cloud/documentai').v1;
 
@@ -20,9 +20,13 @@ export const config = {
 };
 
 const extractPdfContent = async (buffer: Buffer): Promise<string> => {
-  // Initialize client
-  const client = new DocumentProcessorServiceClient();
-
+  let client;
+  if (process.env.GOOGLE_APPLICATION_PDF_CREDENTIALS) {
+    const credentials = JSON.parse(process.env.GOOGLE_APPLICATION_PDF_CREDENTIALS);
+    client = new DocumentProcessorServiceClient({ credentials });
+  } else {
+    throw new Error('GOOGLE_APPLICATION_PDF_CREDENTIALS environment variable is not set');
+  }
   // Add your Google Cloud project ID, location, and processor ID here
   const projectId = 'capable-bliss-378816';
   const location = 'us';
@@ -64,8 +68,11 @@ const extractDocxContent = async (buffer: Buffer): Promise<string> => {
   return result.value;
 };
 
-const extractVideoContent = async (buffer: Buffer, fileName: String, filepath: String): Promise<string> => {
-  
+const extractVideoContent = async (
+  buffer: Buffer,
+  fileName: String,
+  filepath: String
+): Promise<string> => {
   /* Write data to MEMFS, need to use Uint8Array for binary data */
   const ffmpeg = await FFmpeg.createFFmpeg({ log: true });
   await ffmpeg.load();
@@ -80,42 +87,42 @@ const extractVideoContent = async (buffer: Buffer, fileName: String, filepath: S
 
   // Return the output file as a blob
   const outputBuffer = Buffer.from(data.buffer);
-  
+
   // Creates a new SpeechClient with authentication
   let client;
 
-  if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+  if (process.env.GOOGLE_APPLICATION_VIDEO_CREDENTIALS) {
     client = new SpeechClient({
-      credentials: JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS),
+      credentials: JSON.parse(process.env.GOOGLE_APPLICATION_VIDEO_CREDENTIALS),
     });
   } else {
-    throw new Error('GOOGLE_APPLICATION_CREDENTIALS environment variable is not set');
+    throw new Error('GOOGLE_APPLICATION_VIDEO_CREDENTIALS environment variable is not set');
   }
-  console.log("Authenticated")
+  console.log('Authenticated');
 
   let storageClient;
 
-  if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+  if (process.env.GOOGLE_APPLICATION_VIDEO_CREDENTIALS) {
     storageClient = new Storage({
-      credentials: JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS),
+      credentials: JSON.parse(process.env.GOOGLE_APPLICATION_VIDEO_CREDENTIALS),
     });
   } else {
-    throw new Error('GOOGLE_APPLICATION_CREDENTIALS environment variable is not set');
+    throw new Error('GOOGLE_APPLICATION_VIDEO_CREDENTIALS environment variable is not set');
   }
   console.log('Storage authenticated');
   // Configuration object for the speech recognition request
   const requestConfig: any = {
     enableAutomaticPunctuation: true,
-    encoding: "FLAC",
-    languageCode: "en-US",
-    model: "video",
+    encoding: 'FLAC',
+    languageCode: 'en-US',
+    model: 'video',
     audioChannelCount: 2,
-    sampleRateHertz: 44100
+    sampleRateHertz: 44100,
   };
   // Uploads the audio file to Google Cloud Storage
   const bucketName = 'audio-files-hackathon';
   const bucket = storageClient.bucket(bucketName);
-  const bucketFileName = `${fileName.toString()}.flac`
+  const bucketFileName = `${fileName.toString()}.flac`;
   const file = bucket.file(bucketFileName);
   await file.save(outputBuffer);
   // Creates a new recognition audio object with the GCS URI
@@ -125,8 +132,8 @@ const extractVideoContent = async (buffer: Buffer, fileName: String, filepath: S
 
   const request: any = {
     audio,
-    config: requestConfig
-  }
+    config: requestConfig,
+  };
 
   try {
     console.log('Starting speech recognition');
@@ -134,22 +141,23 @@ const extractVideoContent = async (buffer: Buffer, fileName: String, filepath: S
     const [operation] = await client.longRunningRecognize(request);
     const [response] = await operation.promise();
     console.log('Speech recognition completed');
-    console.log("response", response)
+    console.log('response', response);
     // Extracts the transcription from the response
     const transcription = response.results
-    ? response.results
-        .map((result: any) =>{
-          console.log("result alternatives: ", result.alternatives)
-          return result.alternatives[0].transcript})
-        .join('\n')
-    : '';
+      ? response.results
+          .map((result: any) => {
+            console.log('result alternatives: ', result.alternatives);
+            return result.alternatives[0].transcript;
+          })
+          .join('\n')
+      : '';
 
     return transcription;
   } catch (error) {
     console.error(error);
     throw error;
   }
-}
+};
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -235,7 +243,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const bucket = new GridFSBucket(db);
       // Assuming only one file is uploaded at a time
       const file = data.files.file[0]; // access the first file in the array
- 
+
       const readStream = fs.createReadStream(file.filepath); // use `filepath` instead of `path`
       const uploadStream = bucket.openUploadStream(file.originalFilename); // use `originalFilename` instead of `name`
       // Attach the email & name field to the file metadata
@@ -244,11 +252,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         description: data.fields.description || '',
         userEmail: data.fields.userEmail || '',
         userName: data.fields.userName || '',
-        filepath: file.filepath
+        filepath: file.filepath,
       };
 
       readStream.pipe(uploadStream);
-      
+
       uploadStream.on('finish', async (file: any) => {
         try {
           const fileContent: any = [];
@@ -262,21 +270,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             const extension = path.extname(file.filename).slice(1);
             let textContent = '';
-            console.log("extension", extension)
+            console.log('extension', extension);
 
             if (extension === 'pdf') {
               textContent = await extractPdfContent(buffer);
               isDocx = false;
             } else if (extension === 'docx') {
               textContent = await extractDocxContent(buffer);
-            } else if (extension === 'mp4'){
-              textContent = await extractVideoContent(buffer, file.filename, file.metadata.filepath);
+            } else if (extension === 'mp4') {
+              textContent = await extractVideoContent(
+                buffer,
+                file.filename,
+                file.metadata.filepath
+              );
               isDocx = false;
             } else {
               throw new Error('Unsupported file type');
             }
-            console.log("textcontent:", textContent)
-            res.status(200).json({ message: 'File uploaded and summarized successfully' });
+            console.log('textcontent:', textContent);
             const summary = await summarizeContent(textContent, isDocx);
             const qna = await generateQnA(summary);
             // Split the string into an array
