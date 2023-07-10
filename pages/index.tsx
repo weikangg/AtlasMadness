@@ -22,18 +22,17 @@ const useStyles = createStyles((theme) => ({
 const features = [
   {
     title: 'Rapid Content Summarization',
-    description: 'Effortlessly generate summaries of lecture content from PDF, DOC, or MP4 files. Save time and enhance learning by retaining key concepts.',
+    description: 'Ingest any form of lecture content, be it PDF, DOC, or MP4. Our state-of-the-art AI, integrating OpenAI and Google Cloud technologies, skillfully extracts and synthesizes the key concepts into concise summaries. Amplify learning by focusing on what matters.',
   },
   {
-    title: 'Multimodal File Analysis',
-    description: 'Seamlessly handle various file formats using Google Cloud features such as DocumentAI and Speech-To-Text. Enjoy comprehensive content analysis across diverse file types.',
+    title: 'Detailed Learning Toolkit',
+    description: 'Download the original and summarized documents, engage with custom-made quiz cards, and bookmark key notes for future reference. Our platform elevates your study experience, seamlessly blending storage, recall practice, and summarization.',
   },
   {
-    title: 'Interactive Study Toolkit',
-    description: 'Access original documents and summaries for future reference. Engage in active recall with personalized quiz cards. Easily bookmark notes and get guidance through the chatbot.',
+    title: 'Interactive Global Platform',
+    description: 'Our built-in chatbot is ready to clarify doubts and guide your learning. Expand your learning horizons with downloadable summaries available in various languages. Whether you are local or global, we have you covered for a more inclusive learning experience.',
   },
 ];
-
 
 export default function HomePage() {
   const { classes } = useStyles();
