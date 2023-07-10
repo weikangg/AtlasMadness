@@ -41,29 +41,29 @@ interface TableOfContentsProps {
   links: { label: string; id: string; order: number }[];
 }
 
-function handleLinkClick(id: string){
+function handleLinkClick(id: string) {
   const element = document.getElementById(id)!;
 
   element.scrollIntoView({
-    behavior: "smooth",
-    block: "start",
-    inline: "nearest"
+    behavior: 'smooth',
+    block: 'start',
+    inline: 'nearest',
   });
 }
 
-export function TableOfContents({ id, links }: TableOfContentsProps) {
-  const [active, setActive] = useState(links[0].id)
+export default function TableOfContents({ id, links }: TableOfContentsProps) {
+  const [active, setActive] = useState(links[0].id);
   const { classes, cx } = useStyles();
   const items = links.map((item) => (
     <Box<'a'>
       component="a"
       onClick={(e) => {
-        handleLinkClick(item.id)
-        setActive(item.id)
+        handleLinkClick(item.id);
+        setActive(item.id);
       }}
       key={item.label}
       className={cx(classes.link, { [classes.linkActive]: active === item.id })}
-      sx={(theme) => ({ paddingLeft: `calc(${item.order+1} * ${theme.spacing.md})` })}
+      sx={(theme) => ({ paddingLeft: `calc(${item.order + 1} * ${theme.spacing.md})` })}
     >
       {item.label}
     </Box>
