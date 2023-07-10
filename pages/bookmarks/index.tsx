@@ -57,13 +57,13 @@ export default function AllBookmarksPage() {
       <div className={classes.header}>
         <h1>All Bookmarks</h1>
 
-        <ArticleSection
-          notes={notes}
-          isLoading={isLoading}
-          removeNote={removeNote}
-          emptyMessage="No bookmarked notes for now. Bookmark something?"
-        />
-      </div>
+      <ArticleSection
+        notes={notes}
+        isLoading={isLoading}
+        removeNote={removeNote}
+        emptyMessage="No bookmarked notes for now. Bookmark something?"
+      />
+            </div>
     </>
   );
 }

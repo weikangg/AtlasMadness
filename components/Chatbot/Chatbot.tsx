@@ -5,7 +5,13 @@ import styles from './Chatbot.module.css'; // Import your styles
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '0', // Initial id
+      text: 'Hi, how may I help you today?',
+      isUserMessage: false, // It's a bot message
+    },
+  ]);
   const [userInput, setUserInput] = useState('');
   const [aiReply, setAiReply] = useState('');
   const [isLoading, setIsLoading] = useState(false);
