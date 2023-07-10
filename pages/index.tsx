@@ -21,16 +21,16 @@ const useStyles = createStyles((theme) => ({
 
 const features = [
   {
-    title: 'Automatic Content Summarization',
-    description: 'Effortlessly generate summaries of lecture content uploaded as PDF, DOC, or MP4 files using OpenAI. Our powerful algorithms thoroughly analyze the text, extracting key information and distilling it into comprehensive summaries. This helps you effortlessly retain crucial concepts, saving you time and enhancing your learning experience.',
+    title: 'Rapid Content Summarization',
+    description: 'Effortlessly generate summaries of lecture content from PDF, DOC, or MP4 files. Save time and enhance learning by retaining key concepts.',
   },
   {
     title: 'Multimodal File Analysis',
-    description: 'Experience seamless handling of various file formats. PDF files are processed with Google Cloud Document AI for Optical Character Recognition (OCR) and text extraction. DOC files undergo direct analysis, while MP4 uploads are converted to text using Google Cloud Speech-to-Text. Enjoy comprehensive content analysis across diverse file types.',
+    description: 'Seamlessly handle various file formats using Google Cloud features such as DocumentAI and Speech-To-Text. Enjoy comprehensive content analysis across diverse file types.',
   },
   {
     title: 'Interactive Study Toolkit',
-    description: 'Access the original uploaded document and its summary in DOC format for future reference. Engage in active recall using personalized quiz cards based on the summarized content. Sign up, log in, and conveniently bookmark notes to access your study materials. Our chatbot is available to provide clarification and guidance whenever you have doubts.',
+    description: 'Access original documents and summaries for future reference. Engage in active recall with personalized quiz cards. Easily bookmark notes and get guidance through the chatbot.',
   },
 ];
 

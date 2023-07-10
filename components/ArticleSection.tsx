@@ -23,6 +23,7 @@ type ArticleSectionProps = {
 const useStyles = createStyles((theme) => ({
   card: {
     marginTop: '50px',
+    marginBottom: '20px',
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gap: theme.spacing.md,
