@@ -29,13 +29,14 @@ export function SubmitButton({ onUpload }: { onUpload: () => void }) {
   const interval = useInterval(
     () =>
       setProgress((current) => {
-        if (current < 100) {
+        if (current < 30) {
           return current + 1;
         }
-
+        if (current < 95) {
+          return current + 0.1;
+        }
         interval.stop();
-        setLoaded(true);
-        return 0;
+        return current;
       }),
     20
   );
@@ -43,9 +44,10 @@ export function SubmitButton({ onUpload }: { onUpload: () => void }) {
     setLoaded(false);
     !interval.active && interval.start();
     await onUpload();
+    setProgress(100);
     interval.stop();
     setLoaded(true);
-  }
+  };
   return (
     <Button
       fullWidth
@@ -54,7 +56,7 @@ export function SubmitButton({ onUpload }: { onUpload: () => void }) {
       color={loaded ? 'teal' : theme.primaryColor}
     >
       <div className={classes.label}>
-        {progress !== 0 ? 'Uploading files' : loaded ? 'Files uploaded' : 'Upload files'}
+        {progress !== 100 ? 'Uploading files' : loaded ? 'Files uploaded' : 'Upload files'}
       </div>
       {progress !== 0 && (
         <Progress
