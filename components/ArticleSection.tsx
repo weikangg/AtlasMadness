@@ -1,6 +1,6 @@
 'use client';
 import ArticleCard from '../components/ArticleCard';
-import { Pagination } from '@mantine/core';
+import { Center, Pagination } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { rem } from '@mantine/core';
 import { useRef } from 'react';
@@ -71,7 +71,9 @@ export default function ArticleSection({
   notes,
   removeNote,
   emptyMessage,
-}: ArticleSectionProps & { emptyMessage?: string }) {
+  isLoading, // Add this
+}: ArticleSectionProps & { emptyMessage?: string; isLoading?: boolean }) {
+  // Modify here
   const inputRef = useRef<HTMLInputElement>(null);
   const { classes } = useStyles();
   const [filteredNotes, setFilteredNotes] = useState<Note[]>(notes || []);
@@ -92,13 +94,12 @@ export default function ArticleSection({
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
-  if (!filteredNotes) {
-    return <div>Loading...</div>; // Or some other placeholder
-  }
-  if (notes.length === 0) {
+
+  if (!isLoading && notes.length === 0) {
+    // Modify here
     return (
       <div>
-        <h4>{emptyMessage}</h4>
+        <h4 style={{ textAlign: 'center' }}>{emptyMessage}</h4>
       </div>
     );
   }

@@ -1,8 +1,8 @@
 import { createStyles, Text, Container, ActionIcon, Group, rem } from '@mantine/core';
 import { IconBrandTwitter, IconBrandYoutube, IconBrandInstagram } from '@tabler/icons-react';
-import { MantineLogo } from '@mantine/ds';
 import  SummAIzeLogo  from '../../images/summAIze.png';
 import { StaticImageData } from 'next/image';
+import Link from 'next/link';
 
 const useStyles = createStyles((theme) => ({
   footer: {
@@ -62,7 +62,6 @@ const useStyles = createStyles((theme) => ({
     fontSize: theme.fontSizes.sm,
     paddingTop: rem(3),
     paddingBottom: rem(3),
-
     '&:hover': {
       textDecoration: 'underline',
     },
@@ -112,15 +111,14 @@ export function FooterLinks({ data }: FooterLinksProps) {
 
   const groups = data.map((group) => {
     const links = group.links.map((link, index) => (
-      <Text<'a'>
-        key={index}
-        className={classes.link}
-        component="a"
-        href={link.link}
-        onClick={(event) => event.preventDefault()}
-      >
-        {link.label}
-      </Text>
+      <Link key={index} href={link.link} style={{textDecoration: 'none'}}passHref>
+        <Text<'a'>
+          className={classes.link}
+          component="a"
+        >
+          {link.label}
+        </Text>
+      </Link>
     ));
 
     return (
@@ -137,7 +135,7 @@ export function FooterLinks({ data }: FooterLinksProps) {
         <div className={classes.logo}>
           <img src={logoSrc} alt="SummAIze Logo" style={{ width: '200px', height: 'auto', marginBottom:'10px' }} />
           <Text size="xs" color="dimmed" className={classes.description}>
-            Helping students take in knowledge one summarized note at a time
+            Effortness Learning, Instant Notes
           </Text>
         </div>
         <div className={classes.groups}>{groups}</div>

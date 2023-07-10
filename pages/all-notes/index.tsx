@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
+import { Card, createStyles, Center, LoadingOverlay } from '@mantine/core';
 import ArticleSection from '../../components/ArticleSection';
-import { Card, createStyles, Center } from '@mantine/core';
 
 type Note = {
   _id: string;
@@ -23,6 +23,7 @@ const useStyles = createStyles((theme) => ({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    minHeight: '100vh',
   },
 }));
 
@@ -42,14 +43,18 @@ export default function AllNotesPage() {
     getNotes();
   }, []);
 
-  if (isLoading) {
-    return <div>Loading...</div>; // Replace this with a loading spinner or similar if you want.
-  }
-
   return (
-    <div className={classes.header}>
-      <h1>All Notes</h1>
-      <ArticleSection notes={notes} emptyMessage="No notes found. Upload a new note now?" />
-    </div>
+    <>
+      {isLoading && <LoadingOverlay visible zIndex={10} />}
+      <div className={classes.header}>
+        <h1>All Notes</h1>
+
+        <ArticleSection
+          notes={notes}
+          isLoading={isLoading}
+          emptyMessage="No notes found. Upload a new note now?"
+        />
+      </div>
+    </>
   );
 }

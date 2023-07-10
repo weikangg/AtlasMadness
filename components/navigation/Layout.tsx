@@ -14,19 +14,19 @@ const Layout = ({ children }: LayoutProps) => {
         links: [
           {
             label:'View All Notes',
-            link: '/pages/all-notes/index.tsx',
+            link: '/all-notes',
           },
           {
             label:'Upload Notes',
-            link: '/',
+            link: '/new-upload',
           },
         ]
       }
   ];
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <HeaderMegaMenu />
-      {children}
+      <div style={{ flex: '1 0 auto' }}>{children}</div>
       <FooterLinks data={allLinks} />
     </div>
   );

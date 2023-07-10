@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Image } from '@mantine/core';
 import test from '../images/banner.png';
 import { createStyles, rem } from '@mantine/core';
+import { LoadingOverlay } from '@mantine/core';
 
 type Note = {
   _id: string;
@@ -35,11 +36,9 @@ export default function HomePage() {
     getNotes();
   }, []);
 
-  if (isLoading) {
-    return <div>Loading...</div>; // Replace this with a loading spinner or similar if you want.
-  }
-
-  return (
+  return isLoading ? (
+    <LoadingOverlay visible zIndex={10} />
+  ) : (
     <>
       <div style={{ textAlign: 'center' }}>
         <h1 style={{ fontSize: '65px', fontWeight: 'bold' }}>Welcome to SummAIze</h1>
