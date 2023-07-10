@@ -1,12 +1,12 @@
 import { useRouter } from 'next/router';
-import { TableOfContents } from './tableOfContents';
+import TableOfContents from '../../../components/tableOfContents';
 import { Grid, Container } from '@mantine/core';
-import {  ObjectId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import {
   DownloadOriginalButton,
   DownloadSummaryButton,
 } from '../../../components/details/DownloadButton';
-import { Accordion, } from '@mantine/core';
+import { Accordion } from '@mantine/core';
 
 import connectToAuthDB from '../../../database/authConn';
 
