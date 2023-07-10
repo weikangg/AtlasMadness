@@ -1,8 +1,10 @@
 import { createStyles, Text, Container, ActionIcon, Group, rem } from '@mantine/core';
 import { IconBrandTwitter, IconBrandYoutube, IconBrandInstagram } from '@tabler/icons-react';
-import  SummAIzeLogo  from '../../images/summAIze.png';
+import SummAIzeLogo from '../../images/summAIze.png';
 import { StaticImageData } from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 const useStyles = createStyles((theme) => ({
   footer: {
@@ -108,18 +110,31 @@ interface FooterLinksProps {
 export function FooterLinks({ data }: FooterLinksProps) {
   const logoSrc = (SummAIzeLogo as StaticImageData).src;
   const { classes } = useStyles();
+  const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const groups = data.map((group) => {
-    const links = group.links.map((link, index) => (
-      <Link key={index} href={link.link} style={{textDecoration: 'none'}}passHref>
-        <Text<'a'>
-          className={classes.link}
-          component="a"
-        >
-          {link.label}
-        </Text>
-      </Link>
-    ));
+    const links = group.links.map((link, index) => {
+      if (isClient) {
+        return (
+          <Link href={link.link} passHref key={index} style = {{textDecoration: 'none'}}> 
+            <Text<'a'> className={classes.link} component="a" >
+              {link.label}
+            </Text>
+          </Link>
+        );
+      } else {
+        return (
+          <Text<'a'> key={index} className={classes.link} component="a" href={link.link} style = {{textDecoration: 'none'}}>
+            {link.label}
+          </Text>
+        );
+      }
+    });
 
     return (
       <div className={classes.wrapper} key={group.title}>
@@ -133,9 +148,13 @@ export function FooterLinks({ data }: FooterLinksProps) {
     <footer className={classes.footer}>
       <Container className={classes.inner}>
         <div className={classes.logo}>
-          <img src={logoSrc} alt="SummAIze Logo" style={{ width: '200px', height: 'auto', marginBottom:'10px' }} />
+          <img
+            src={logoSrc}
+            alt="SummAIze Logo"
+            style={{ width: '200px', height: 'auto', marginBottom: '10px' }}
+          />
           <Text size="xs" color="dimmed" className={classes.description}>
-            Effortness Learning, Instant Notes
+            Effortless Learning, Instant Notes
           </Text>
         </div>
         <div className={classes.groups}>{groups}</div>

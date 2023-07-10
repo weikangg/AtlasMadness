@@ -1,12 +1,13 @@
 import { useRouter } from 'next/router';
 import { TableOfContents } from './tableOfContents';
 import { Grid, Container } from '@mantine/core';
-import { MongoClient, Db, ObjectId } from 'mongodb';
+import {  ObjectId } from 'mongodb';
 import {
   DownloadOriginalButton,
   DownloadSummaryButton,
 } from '../../../components/details/DownloadButton';
-import { Accordion } from '@mantine/core';
+import { Accordion, } from '@mantine/core';
+
 import connectToAuthDB from '../../../database/authConn';
 
 interface Note {
@@ -42,17 +43,17 @@ export async function getServerSideProps(context: any) {
 const links = [
   {
     label: 'Description',
-    id: 'summary',
+    id: 'description',
     order: 0,
   },
   {
     label: 'Summary',
-    id: 'keypoints',
+    id: 'summary',
     order: 0,
   },
   {
     label: 'Quiz Cards',
-    id: 'notes',
+    id: 'quizCards',
     order: 0,
   },
 ];
@@ -67,11 +68,11 @@ export default function Page({ note }: PageProps) {
           <TableOfContents id="100" links={links} />
         </Grid.Col>
         <Grid.Col xs={12} sm={9}>
-          <h4 id="keypoints">Description</h4>
+          <h4 id="description">Description</h4>
           <p>{note.description}</p>
           <h4 id="summary">Summary</h4>
           <p>{note.summary}</p>
-          <h4 id="notes">Quiz Cards</h4>
+          <h4 id="quizCards">Quiz Cards</h4>
           {note.qna.map((x, index) => {
             const question = x.question;
             const answer = x.answer;
