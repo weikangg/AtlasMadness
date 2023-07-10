@@ -14,7 +14,7 @@ export default function FeatureCards({ features }: FeatureCardsProps) {
       justify="center"
     >
       {features.map((feature, index) => (
-        <Col span={3} key={index}>
+        <Col sm={10} md={6} lg={4} xl={3} key={index}>
           <FeatureCard title={feature.title} description={feature.description} />
         </Col>
       ))}
