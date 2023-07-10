@@ -21,7 +21,6 @@ interface PageProps {
   note: Note;
 }
 
-
 export async function getServerSideProps(context: any) {
   const db = await connectToAuthDB();
   const { params } = context;
@@ -73,12 +72,12 @@ export default function Page({ note }: PageProps) {
           <h4 id="summary">Summary</h4>
           <p>{note.summary}</p>
           <h4 id="notes">Quiz Cards</h4>
-          {note.qna.map((x) => {
+          {note.qna.map((x, index) => {
             const question = x.question;
             const answer = x.answer;
 
             return (
-              <Accordion>
+              <Accordion key={index}>
                 <Accordion.Item value="question">
                   <Accordion.Control>{question}</Accordion.Control>
                   <Accordion.Panel>{answer}</Accordion.Panel>
