@@ -171,7 +171,7 @@ export function HeaderMegaMenu() {
           <Link href="/">
             <img src={logoSrc} alt="SummAIze Logo" style={{ width: '130px', height: 'auto' }} />
           </Link>
-          <Group sx={{ height: '100%' }} spacing={0} className={classes.hiddenMobile}>
+          <Group sx={{ height: '100%' }} spacing={0} my={0} className={classes.hiddenMobile}>
             <Link href="/" className={classes.link}>
               <IconHome2 size={20} />
               Home
@@ -189,18 +189,18 @@ export function HeaderMegaMenu() {
               <IconBookUpload size={20} />
               Upload New
             </Link>
-            <ColorSchemeToggle />
           </Group>
-          <Group className={classes.hiddenMobile}>
+          <Group sx={{ height: '100%' }} spacing={10} my={0} className={classes.hiddenMobile}>
             {session ? (
               <>
-                <Group>
+                <Group sx={{ height: '100%' }} align='center'>
+                  <ColorSchemeToggle />
                   <Avatar radius="xl" />
                   <Text>{session?.user?.name}</Text>
+                  <Button variant="default" onClick={() => signOut()}>
+                    Sign Out
+                  </Button>
                 </Group>
-                <Button variant="default" onClick={() => signOut()}>
-                  Sign Out
-                </Button>
               </>
             ) : (
               <Button variant="default" onClick={openModal}>
