@@ -1365,6 +1365,18 @@
     "teeny-request" "^8.0.0"
     "uuid" "^8.0.0"
 
+"@google-cloud/translate@^7.2.2":
+  "integrity" "sha512-IAJhPKotLH/OF/NzWml/byLDN+OILbs1P4k+7HNUJK618NsShFelRKzh3pRUUQA4DX0je3HaEZw9nR+5uJ6ZEg=="
+  "resolved" "https://registry.npmjs.org/@google-cloud/translate/-/translate-7.2.2.tgz"
+  "version" "7.2.2"
+  dependencies:
+    "@google-cloud/common" "^4.0.0"
+    "@google-cloud/promisify" "^3.0.0"
+    "arrify" "^2.0.0"
+    "extend" "^3.0.2"
+    "google-gax" "^3.5.8"
+    "is-html" "^2.0.0"
+
 "@grpc/grpc-js@~1.8.0":
   "integrity" "sha512-DGuSbtMFbaRsyffMf+VEkVu8HkSXEUfO3UyGJNtqxW9ABdtTIA+2UXAJpwbJS+xfQxuwqLUeELmL6FuZkOqPxw=="
   "resolved" "https://registry.npmjs.org/@grpc/grpc-js/-/grpc-js-1.8.17.tgz"
@@ -7303,7 +7315,7 @@
     "react-property" "2.0.0"
     "style-to-js" "1.1.0"
 
-"html-tags@^3.1.0":
+"html-tags@^3.0.0", "html-tags@^3.1.0":
   "integrity" "sha512-vy7ClnArOZwCnqZgvv+ddgHgJiAFXe3Ge9ML5/mBctVJoUoYPCdxVucOywjDARn6CVoh3dRSFdPHy2sX80L0Wg=="
   "resolved" "https://registry.npmjs.org/html-tags/-/html-tags-3.2.0.tgz"
   "version" "3.2.0"
@@ -7749,6 +7761,13 @@
   "integrity" "sha512-gyPJuv83bHMpocVYoqof5VDiZveEoGoFL8m3BXNb2VW8Xs+rz9kqO8LOQ5DH6EsuvilT1ApazU0pyl+ytbPtlw=="
   "resolved" "https://registry.npmjs.org/is-hexadecimal/-/is-hexadecimal-1.0.4.tgz"
   "version" "1.0.4"
+
+"is-html@^2.0.0":
+  "integrity" "sha512-S+OpgB5i7wzIue/YSE5hg0e5ZYfG3hhpNh9KGl6ayJ38p7ED6wxQLd1TV91xHpcTvw90KMJ9EwN3F/iNflHBVg=="
+  "resolved" "https://registry.npmjs.org/is-html/-/is-html-2.0.0.tgz"
+  "version" "2.0.0"
+  dependencies:
+    "html-tags" "^3.0.0"
 
 "is-map@^2.0.2":
   "integrity" "sha512-cOZFQQozTha1f4MxLFzlgKYPTyj26picdZTx82hbc/Xf4K/tZOOXSCkMvU4pKioRXGDLJRn0GM7Upe7kR721yg=="
