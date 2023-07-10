@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { HeaderMegaMenu } from './Header';
 import { FooterLinks } from './Footer';
-import Link from 'next/link';
+import Chatbot from '../Chatbot/Chatbot';
 
 type LayoutProps = {
   children: ReactNode;
@@ -27,6 +27,7 @@ const Layout = ({ children }: LayoutProps) => {
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <HeaderMegaMenu />
       <div style={{ flex: '1 0 auto' }}>{children}</div>
+      <Chatbot />
       <FooterLinks data={allLinks} />
     </div>
   );
