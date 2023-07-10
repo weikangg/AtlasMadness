@@ -58,7 +58,6 @@ const useStyles = createStyles((theme) => ({
       width: '100%',
     },
 
-
     ...theme.fn.hover({
       backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
     }),
@@ -177,10 +176,12 @@ export function HeaderMegaMenu() {
               Home
             </Link>
 
-            <Link href="/bookmarks" className={classes.link}>
-              <IconBookmarks size={20} />
-              Bookmarks
-            </Link>
+            {session && (
+              <Link href="/bookmarks" className={classes.link}>
+                <IconBookmarks size={20} />
+                Bookmarks
+              </Link>
+            )}
             <Link href="/all-notes" className={classes.link}>
               <IconNotes size={20} />
               All Notes
@@ -193,7 +194,7 @@ export function HeaderMegaMenu() {
           <Group sx={{ height: '100%' }} spacing={10} my={0} className={classes.hiddenMobile}>
             {session ? (
               <>
-                <Group sx={{ height: '100%' }} align='center'>
+                <Group sx={{ height: '100%' }} align="center">
                   <ColorSchemeToggle />
                   <Avatar radius="xl" />
                   <Text>{session?.user?.name}</Text>
