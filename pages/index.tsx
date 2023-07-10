@@ -2,7 +2,8 @@ import ArticleSection from '../components/ArticleSection';
 import { ContactUs } from '../components/ContactUs';
 import { useState, useEffect } from 'react';
 import test from '../images/banner.png';
-import { createStyles, LoadingOverlay,Image} from '@mantine/core';
+import { createStyles, LoadingOverlay, Image, Grid, Col } from '@mantine/core';
+import FeatureCards from '../components/FeatureCards/FeatureCards';
 
 type Note = {
   _id: string;
@@ -17,6 +18,21 @@ const useStyles = createStyles((theme) => ({
     padding: '100px',
   },
 }));
+
+const features = [
+  {
+    title: 'Upload and Summarize',
+    description: 'Easily upload PDF, DOC, or MP4 files and get automatic summarization using AI technologies.',
+  },
+  {
+    title: 'Download Original and Summary',
+    description: 'Download the original document that you uploaded and the summarized content as a DOC file.',
+  },
+  {
+    title: 'Quiz Cards',
+    description: 'Generate 5 quiz cards based on the summarized content for active recall practice.',
+  },
+];
 
 export default function HomePage() {
   const { classes } = useStyles();
@@ -47,7 +63,8 @@ export default function HomePage() {
           system helps students from all over the world condense high volumes of study materials in
           a matter of seconds.
         </p>
-        <Image className={classes.img} src={test.src} />
+      <FeatureCards features={features} />
+        {/* <Image className={classes.img} src={test.src} /> */}
       </div>
       <ArticleSection notes={notes} />
       <div
