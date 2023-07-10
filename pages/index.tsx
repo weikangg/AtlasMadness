@@ -1,10 +1,8 @@
 import ArticleSection from '../components/ArticleSection';
 import { ContactUs } from '../components/ContactUs';
 import { useState, useEffect } from 'react';
-import { Image } from '@mantine/core';
 import test from '../images/banner.png';
-import { createStyles, rem } from '@mantine/core';
-import { LoadingOverlay } from '@mantine/core';
+import { createStyles, LoadingOverlay,Image} from '@mantine/core';
 
 type Note = {
   _id: string;
@@ -52,7 +50,9 @@ export default function HomePage() {
         <Image className={classes.img} src={test.src} />
       </div>
       <ArticleSection notes={notes} />
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <div
+        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}
+      >
         <ContactUs />
       </div>
     </>
