@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { MongoClient, Db, GridFSBucket } from 'mongodb';
-import { PassThrough } from 'stream';
 import { IncomingForm } from 'formidable';
 import fs from 'fs';
 import { OpenAIApi, Configuration } from 'openai';
@@ -10,10 +9,7 @@ import connectToAuthDB from '../../database/authConn';
 import { SpeechClient } from '@google-cloud/speech';
 import { Storage } from '@google-cloud/storage';
 // @ts-ignore
-import ffmpeg from 'fluent-ffmpeg';
-import ffmpegPath from 'ffmpeg-static';
-
-ffmpeg.setFfmpegPath(ffmpegPath);
+import FFmpeg from '@ffmpeg.wasm/main'
 
 const { DocumentProcessorServiceClient } = require('@google-cloud/documentai').v1;
 
@@ -69,7 +65,22 @@ const extractDocxContent = async (buffer: Buffer): Promise<string> => {
 };
 
 const extractVideoContent = async (buffer: Buffer, fileName: String, filepath: String): Promise<string> => {
-  console.log(filepath)
+  
+  /* Write data to MEMFS, need to use Uint8Array for binary data */
+  const ffmpeg = await FFmpeg.createFFmpeg({ log: true });
+  await ffmpeg.load();
+
+  ffmpeg.FS('writeFile', 'inputFlac.flac', new Uint8Array(buffer));
+
+  // Run the ffmpeg command to extract the audio and convert it to FLAC
+  await ffmpeg.run('-i', 'inputFlac.flac', '-vn', '-c:a', 'flac', 'output.flac');
+
+  // Read the output file
+  const data = ffmpeg.FS('readFile', 'output.flac');
+
+  // Return the output file as a blob
+  const outputBuffer = Buffer.from(data.buffer);
+  
   // Creates a new SpeechClient with authentication
   let client;
 
@@ -92,23 +103,24 @@ const extractVideoContent = async (buffer: Buffer, fileName: String, filepath: S
     throw new Error('GOOGLE_APPLICATION_CREDENTIALS environment variable is not set');
   }
   console.log('Storage authenticated');
-
   // Configuration object for the speech recognition request
   const requestConfig: any = {
     enableAutomaticPunctuation: true,
-    encoding: "LINEAR16",
+    encoding: "FLAC",
     languageCode: "en-US",
     model: "video",
-    sampleRateHertz: 16000
+    audioChannelCount: 2,
+    sampleRateHertz: 44100
   };
   // Uploads the audio file to Google Cloud Storage
   const bucketName = 'audio-files-hackathon';
   const bucket = storageClient.bucket(bucketName);
-  const file = bucket.file(fileName.toString());
-  await file.save(buffer);
+  const bucketFileName = `${fileName.toString()}.flac`
+  const file = bucket.file(bucketFileName);
+  await file.save(outputBuffer);
   // Creates a new recognition audio object with the GCS URI
   const audio: any = {
-    uri: `gs://${bucketName}/${fileName}`,
+    uri: `gs://${bucketName}/${bucketFileName}`,
   };
 
   const request: any = {
@@ -119,9 +131,8 @@ const extractVideoContent = async (buffer: Buffer, fileName: String, filepath: S
   try {
     console.log('Starting speech recognition');
     // Performs speech recognition on the audio file
-    const [response] = await client.recognize(request);
-    // const [operation] = await client.longRunningRecognize(request);
-    // const [response] = await operation.promise();
+    const [operation] = await client.longRunningRecognize(request);
+    const [response] = await operation.promise();
     console.log('Speech recognition completed');
     console.log("response", response)
     // Extracts the transcription from the response
@@ -212,7 +223,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           reject(err);
           return;
         }
-        console.log(files); // log the files object
         resolve({ fields, files });
       });
 
@@ -225,6 +235,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const bucket = new GridFSBucket(db);
       // Assuming only one file is uploaded at a time
       const file = data.files.file[0]; // access the first file in the array
+ 
       const readStream = fs.createReadStream(file.filepath); // use `filepath` instead of `path`
       const uploadStream = bucket.openUploadStream(file.originalFilename); // use `originalFilename` instead of `name`
       // Attach the email & name field to the file metadata
@@ -266,7 +277,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
             console.log("textcontent:", textContent)
             res.status(200).json({ message: 'File uploaded and summarized successfully' });
-            return
             const summary = await summarizeContent(textContent, isDocx);
             const qna = await generateQnA(summary);
             // Split the string into an array
