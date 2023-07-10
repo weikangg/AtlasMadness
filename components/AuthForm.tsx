@@ -22,7 +22,7 @@ import { useModalContext } from '../contexts/ModalContext'; // adjust the path a
 export function AuthenticationForm(props: PaperProps) {
   const [type, toggle] = useToggle(['login', 'register']);
   const { closeModal } = useModalContext();
-  
+
   const form = useForm({
     initialValues: {
       email: '',
@@ -50,7 +50,6 @@ export function AuthenticationForm(props: PaperProps) {
       if (status?.error) {
         throw new Error('Authentication failed');
       }
-
     } catch (error) {
       notifications.show({
         title: 'Authentication failed',
@@ -82,16 +81,10 @@ export function AuthenticationForm(props: PaperProps) {
       </Text>
 
       <Group grow mb="md" mt="md">
-        <GoogleButton
-          radius="xl"
-          onClick={() => signIn('google', { callbackUrl: process.env.Development_URL })}
-        >
+        <GoogleButton radius="xl" onClick={() => signIn('google', { callbackUrl: '/' })}>
           Google
         </GoogleButton>
-        <GithubButton
-          radius="xl"
-          onClick={() => signIn('github', { callbackUrl: process.env.Development_URL })}
-        >
+        <GithubButton radius="xl" onClick={() => signIn('github', { callbackUrl: '/' })}>
           Github
         </GithubButton>
       </Group>

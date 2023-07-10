@@ -44,20 +44,20 @@ const useStyles = createStyles((theme) => ({
   link: {
     display: 'flex',
     alignItems: 'center',
-    height: '100%',
-    paddingLeft: theme.spacing.md,
-    paddingRight: theme.spacing.md,
+    height: 'auto', // Adjust this
+    padding: theme.spacing.lg,
     textDecoration: 'none',
     color: theme.colorScheme === 'dark' ? theme.white : theme.black,
     fontWeight: 500,
     fontSize: theme.fontSizes.sm,
 
     [theme.fn.smallerThan('sm')]: {
-      height: rem(42),
+      height: rem(42), // You might want to adjust this as well
       display: 'flex',
       alignItems: 'center',
       width: '100%',
     },
+
 
     ...theme.fn.hover({
       backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
@@ -171,7 +171,7 @@ export function HeaderMegaMenu() {
           <Link href="/">
             <img src={logoSrc} alt="SummAIze Logo" style={{ width: '130px', height: 'auto' }} />
           </Link>
-          <Group sx={{ height: '100%' }} spacing={0} className={classes.hiddenMobile}>
+          <Group sx={{ height: '100%' }} spacing={0} my={0} className={classes.hiddenMobile}>
             <Link href="/" className={classes.link}>
               <IconHome2 size={20} />
               Home
@@ -189,18 +189,18 @@ export function HeaderMegaMenu() {
               <IconBookUpload size={20} />
               Upload New
             </Link>
-            <ColorSchemeToggle />
           </Group>
-          <Group className={classes.hiddenMobile}>
+          <Group sx={{ height: '100%' }} spacing={10} my={0} className={classes.hiddenMobile}>
             {session ? (
               <>
-                <Group>
+                <Group sx={{ height: '100%' }} align='center'>
+                  <ColorSchemeToggle />
                   <Avatar radius="xl" />
                   <Text>{session?.user?.name}</Text>
+                  <Button variant="default" onClick={() => signOut()}>
+                    Sign Out
+                  </Button>
                 </Group>
-                <Button variant="default" onClick={() => signOut()}>
-                  Sign Out
-                </Button>
               </>
             ) : (
               <Button variant="default" onClick={openModal}>
