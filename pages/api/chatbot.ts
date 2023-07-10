@@ -12,7 +12,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const response = await openai.createCompletion({
       model: 'text-davinci-003', // Choose the appropriate OpenAI model
       prompt: prompt,
-      max_tokens: 1000, // Adjust the maximum number of tokens as needed
+      max_tokens: 2000, // Adjust the maximum number of tokens as needed
       temperature: 0.7, // Adjust the temperature for controlling randomness
       n: 1, // Generate a single response
     });
