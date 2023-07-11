@@ -56,7 +56,13 @@ export function SubmitButton({ onUpload }: { onUpload: () => void }) {
       color={loaded ? 'teal' : theme.primaryColor}
     >
       <div className={classes.label}>
-        {progress !== 100 ? 'Uploading files' : loaded ? 'Files uploaded' : 'Upload files'}
+        {progress === 0
+          ? 'Upload files'
+          : progress !== 100
+          ? 'Uploading files'
+          : loaded
+          ? 'Files uploaded'
+          : 'Upload files'}
       </div>
       {progress !== 0 && (
         <Progress
