@@ -204,10 +204,13 @@ export function HeaderMegaMenu() {
                 </Group>
               </>
             ) : (
-              <Button variant="default" onClick={openModal}>
-                {' '}
-                Sign In
-              </Button>
+              <>
+                <ColorSchemeToggle />
+                <Button variant="default" onClick={openModal}>
+                  {' '}
+                  Sign In
+                </Button>
+              </>
             )}
             {modalOpen && (
               <Modal onClose={closeModal} opened={modalOpen}>
