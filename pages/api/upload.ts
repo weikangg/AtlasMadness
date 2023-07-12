@@ -318,6 +318,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           });
         } catch (error) {
           res.status(500).json({ error: 'Error summarizing file content' });
+          alert('Error summarizing file content. Please try again later!');
         }
       });
 
